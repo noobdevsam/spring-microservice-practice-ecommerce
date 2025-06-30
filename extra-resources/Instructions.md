@@ -61,6 +61,6 @@ This structure ensures scalability, maintainability, and resilience for the e-co
 
 ## Additional Resources
 
-This project follows the following repository::
+This project uses the following repository:
 
 - https://github.com/ali-bouali/microservices-full-code
