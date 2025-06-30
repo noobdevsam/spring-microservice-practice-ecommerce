@@ -27,9 +27,11 @@ public class GlobalExceptionHandler {
 
         ex.getBindingResult().getAllErrors()
                 .forEach(error -> {
-                    var fieldName = ((FieldError) error).getField();
-                    var errorMessage = error.getDefaultMessage();
-                    errors.put(fieldName, errorMessage);
+                    if (error instanceof FieldError) {
+                        var fieldName = ((FieldError) error).getField();
+                        var errorMessage = error.getDefaultMessage();
+                        errors.put(fieldName, errorMessage);
+                    }
                 });
 
         return ResponseEntity
