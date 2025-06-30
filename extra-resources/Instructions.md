@@ -55,6 +55,12 @@
 7. Containerize all components with Docker.
 8. Deploy and test the full system.
 
+This structure ensures scalability, maintainability, and resilience for the e-commerce application.
+
 ---
 
-This structure ensures scalability, maintainability, and resilience for the e-commerce application.
+## Additional Resources
+
+This project follows the following repository::
+
+- https://github.com/ali-bouali/microservices-full-code
