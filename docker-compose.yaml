@@ -1,0 +1,26 @@
+services:
+    ms-db-mysqldb:
+        container_name: ms-db-mysqldb
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: ms-db
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: password
+        ports:
+            - "3306:3306"
+        networks:
+            - microservices-net
+        restart: unless-stopped
+    
+    mail-dev:
+        container_name: ms-mail-dev
+        image: maildev/maildev:latest
+        ports:
+            - "1080:1080"
+            - "1025:1025"
+
+
+networks:
+    microservices-net:
+        driver: bridge
