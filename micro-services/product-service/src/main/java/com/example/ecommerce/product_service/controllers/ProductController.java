@@ -46,7 +46,7 @@ public class ProductController {
 
     @PostMapping("/purchase")
     public ResponseEntity<List<ProductPurchaseResponseDTO>> purchaseProducts(
-            @RequestBody List<ProductPurchaseRequestDTO> productPurchaseRequestDTOs
+            @RequestBody List<@Valid ProductPurchaseRequestDTO> productPurchaseRequestDTOs
     ) {
         return ResponseEntity.ok(
                 productService.performPurchaseProducts(productPurchaseRequestDTOs)
