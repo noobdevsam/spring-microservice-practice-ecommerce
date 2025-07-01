@@ -69,6 +69,14 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductPurchaseResponseDTO> performPurchaseProducts(
             List<ProductPurchaseRequestDTO> productRequestDTOs
     ) {
+
+        // Validate purchase quantities
+        for (ProductPurchaseRequestDTO dto : productRequestDTOs) {
+            if (dto.quantity() <= 0) {
+                throw new ProductPurchaseException("Purchase quantity must be positive for product ID: " + dto.productId());
+            }
+        }
+
         // Map productId to request for quick lookup
         Map<Integer, ProductPurchaseRequestDTO> requestMap = productRequestDTOs
                 .stream()
