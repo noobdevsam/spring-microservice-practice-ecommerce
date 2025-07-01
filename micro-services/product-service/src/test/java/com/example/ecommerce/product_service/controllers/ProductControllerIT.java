@@ -64,6 +64,7 @@ class ProductControllerIT {
                 "/api/v1/products", HttpMethod.GET, null,
                 new ParameterizedTypeReference<>() {
                 });
+
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(resp.getBody()).isInstanceOf(List.class);
     }
@@ -73,6 +74,7 @@ class ProductControllerIT {
     void getProductByInvalidId() {
         ResponseEntity<String> resp = restTemplate.getForEntity(
                 "/api/v1/products/999999", String.class);
+
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(resp.getBody()).contains("not found");
     }
@@ -80,9 +82,10 @@ class ProductControllerIT {
     @Test
     @DisplayName("Create product with invalid data returns 400")
     void createProductInvalid() {
-        ProductRequestDTO invalid = new ProductRequestDTO(null, "", "", -1, null, null);
+        var invalid = new ProductRequestDTO(null, "", "", -1, null, null);
         ResponseEntity<String> resp = restTemplate.postForEntity(
                 "/api/v1/products", invalid, String.class);
+
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(resp.getBody()).contains("errors");
     }
@@ -91,17 +94,22 @@ class ProductControllerIT {
     @DisplayName("Purchase products with valid and invalid data")
     void purchaseProducts() {
         // Create a product first
-        Integer id = restTemplate.postForEntity(
+        var id = restTemplate.postForEntity(
                 "/api/v1/products", validProductRequest, Integer.class).getBody();
-        ProductPurchaseRequestDTO validPurchase = new ProductPurchaseRequestDTO(id, 2);
+        var validPurchase = new ProductPurchaseRequestDTO(id, 2);
+
         // Valid purchase
         ResponseEntity<String> resp = restTemplate.postForEntity(
                 "/api/v1/products/purchase", List.of(validPurchase), String.class);
+
         assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.OK);
+
         // Invalid purchase (invalid product id)
-        ProductPurchaseRequestDTO invalidPurchase = new ProductPurchaseRequestDTO(999999, 1);
+        var invalidPurchase = new ProductPurchaseRequestDTO(999999, 1);
+
         ResponseEntity<String> resp2 = restTemplate.postForEntity(
                 "/api/v1/products/purchase", List.of(invalidPurchase), String.class);
+
         assertThat(resp2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
