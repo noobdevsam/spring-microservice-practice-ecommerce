@@ -1,12 +1,18 @@
 services:
     ms-db-mysqldb:
-        container_name: ms-db-mysqldb
+        container_name: ms-db-mysql
         image: mysql:latest
         environment:
             MYSQL_ROOT_PASSWORD: password
-            MYSQL_DATABASE: ms-db
-            MYSQL_USER: admin
+            MYSQL_DATABASE: productdb
+            MYSQL_USER: productadmin
             MYSQL_PASSWORD: password
+        #           MYSQL_DATABASE2: productdb2
+        #           MYSQL_USER2: productadmin
+        #           MYSQL_PASSWORD2: password
+        #           and so on...
+        volumes:
+            - mysql-data:/var/lib/mysql
         ports:
             - "3306:3306"
         networks:
@@ -24,3 +30,5 @@ services:
 networks:
     microservices-net:
         driver: bridge
+volumes:
+    mysql-data:
