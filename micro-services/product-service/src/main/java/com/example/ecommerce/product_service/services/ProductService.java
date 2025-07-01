@@ -15,6 +15,6 @@ public interface ProductService {
 
     Integer createProduct(ProductRequestDTO productRequestDTO);
 
-    List<ProductPurchaseResponseDTO> purchaseProducts(List<ProductPurchaseRequestDTO> productRequestDTOs);
+    List<ProductPurchaseResponseDTO> performPurchaseProducts(List<ProductPurchaseRequestDTO> productRequestDTOs);
 
 }
