@@ -70,6 +70,10 @@ public class ProductServiceImpl implements ProductService {
             List<ProductPurchaseRequestDTO> productRequestDTOs
     ) {
 
+        if (productRequestDTOs == null || productRequestDTOs.isEmpty()) {
+            throw new ProductPurchaseException("Product purchase request list cannot be null or empty");
+        }
+
         // Validate purchase quantities
         for (ProductPurchaseRequestDTO dto : productRequestDTOs) {
             if (dto.quantity() <= 0) {
