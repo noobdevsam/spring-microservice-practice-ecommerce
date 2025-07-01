@@ -237,4 +237,20 @@ class ProductServiceImplTest {
         assertTrue(result.isEmpty());
     }
 
+    @Test
+    @DisplayName("Should throw if purchase quantity is zero or negative")
+    void performPurchaseProducts_invalidQuantity() {
+        var reqZero = new ProductPurchaseRequestDTO(1, 0);
+        var reqNegative = new ProductPurchaseRequestDTO(2, -5);
+
+        assertThrows(
+                ProductPurchaseException.class,
+                () -> productService.performPurchaseProducts(List.of(reqZero))
+        );
+        assertThrows(
+                ProductPurchaseException.class,
+                () -> productService.performPurchaseProducts(List.of(reqNegative))
+        );
+    }
+
 }
