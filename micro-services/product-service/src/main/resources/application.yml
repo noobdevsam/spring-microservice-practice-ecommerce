@@ -1,0 +1,31 @@
+spring:
+    application:
+        name: product-service
+    jpa:
+        hibernate:
+            ddl-auto: validate
+    datasource:
+        url: jdbc:mysql://${MYSQL_PS_HOST_ADDRESS:localhost}:3306/productdb
+        username: productadmin
+        password: password
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    flyway:
+        enabled: true
+        baseline-on-migrate: true
+        baseline-version: 0
+        baseline-description: "baseline-initial"
+        user: ${spring.datasource.username}
+        password: ${spring.datasource.password}
+    
+    # temporary
+    cloud:
+        config:
+            enabled: false
+
+server:
+    port: 8082
+
+# temporary
+eureka:
+    client:
+        enabled: false
