@@ -5,7 +5,7 @@ spring:
         hibernate:
             ddl-auto: validate
     datasource:
-        url: jdbc:mysql://${MYSQL_PS_HOST_ADDRESS:localhost}:3306/product
+        url: jdbc:mysql://${MYSQL_PS_HOST_ADDRESS:localhost}:3306/productdb
         username: productadmin
         password: password
         driver-class-name: com.mysql.cj.jdbc.Driver
