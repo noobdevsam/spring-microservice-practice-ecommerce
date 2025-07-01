@@ -1,5 +1,6 @@
 package com.example.ecommerce.product_service.controllers;
 
+import com.example.ecommerce.product_service.exceptions.ProductPurchaseException;
 import com.example.ecommerce.product_service.model.ProductPurchaseRequestDTO;
 import com.example.ecommerce.product_service.model.ProductPurchaseResponseDTO;
 import com.example.ecommerce.product_service.model.ProductRequestDTO;
@@ -18,7 +19,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -62,8 +63,13 @@ class ProductControllerTest {
     @Test
     @DisplayName("GET /api/v1/products/{product-id} - Success")
     void getProductById_success() throws Exception {
-        Mockito.when(productService.getProductById(responseDTO.id())).thenReturn(responseDTO);
-        mockMvc.perform(get("/api/v1/products/{product-id}", responseDTO.id()))
+        Mockito.when(
+                productService.getProductById(responseDTO.id())
+        ).thenReturn(responseDTO);
+
+        mockMvc.perform(
+                        get("/api/v1/products/{product-id}", responseDTO.id())
+                )
                 .andExpect(status().isOk());
     }
 
@@ -71,19 +77,31 @@ class ProductControllerTest {
     @DisplayName("GET /api/v1/products/{product-id} - Not Found")
     void getProductById_notFound() throws Exception {
         int productId = 999;
-        Mockito.when(productService.getProductById(productId)).thenThrow(new EntityNotFoundException("Product not found"));
-        mockMvc.perform(get("/api/v1/products/{product-id}", productId))
+
+        Mockito.when(
+                productService.getProductById(productId)
+        ).thenThrow(
+                new EntityNotFoundException("Product not found")
+        );
+
+        mockMvc.perform(
+                        get("/api/v1/products/{product-id}", productId)
+                )
                 .andExpect(status().isBadRequest());// Expect 404 if handled by GlobalExceptionHandler
     }
 
     @Test
     @DisplayName("POST /api/v1/products - Success")
     void createProduct_success() throws Exception {
-//        ProductRequestDTO dto = new ProductRequestDTO();
-        Mockito.when(productService.createProduct(any(ProductRequestDTO.class))).thenReturn(1);
-        mockMvc.perform(post("/api/v1/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
+        Mockito.when(
+                productService.createProduct(any(ProductRequestDTO.class))
+        ).thenReturn(1);
+
+        mockMvc.perform(
+                        post("/api/v1/products")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestDTO))
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().string("1"));
     }
@@ -92,24 +110,34 @@ class ProductControllerTest {
     @DisplayName("POST /api/v1/products - Invalid Input")
     void createProduct_invalidInput() throws Exception {
         // All fields null to trigger validation error
-        ProductRequestDTO dto = new ProductRequestDTO(null, null, null, 0, null, null);
-        mockMvc.perform(post("/api/v1/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+        var dto = new ProductRequestDTO(null, null, null, 0, null, null);
+
+        mockMvc.perform(
+                        post("/api/v1/products")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
+                )
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("POST /api/v1/products/purchase - Success")
     void purchaseProducts_success() throws Exception {
-        List<ProductPurchaseRequestDTO> requestList = List.of(
+        var requestList = List.of(
                 new ProductPurchaseRequestDTO(1, 2.0)
         );
-        List<ProductPurchaseResponseDTO> responseList = Collections.singletonList(purchaseResponseDTO);
-        Mockito.when(productService.performPurchaseProducts(any(List.class))).thenReturn(responseList);
-        mockMvc.perform(post("/api/v1/products/purchase")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestList)))
+
+        var responseList = Collections.singletonList(purchaseResponseDTO);
+
+        Mockito.when(
+                productService.performPurchaseProducts(any(List.class))
+        ).thenReturn(responseList);
+
+        mockMvc.perform(
+                        post("/api/v1/products/purchase")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestList))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0]").exists());
     }
@@ -117,20 +145,27 @@ class ProductControllerTest {
     @Test
     @DisplayName("POST /api/v1/products/purchase - Empty List")
     void purchaseProducts_emptyList() throws Exception {
-        Mockito.when(productService.performPurchaseProducts(any(List.class))).thenReturn(Collections.emptyList());
-        mockMvc.perform(post("/api/v1/products/purchase")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(Collections.emptyList())))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+        Mockito.when(
+                productService.performPurchaseProducts(any(List.class))
+        ).thenThrow(new ProductPurchaseException("Product purchase request list cannot be null or empty"));
+
+        mockMvc.perform(
+                        post("/api/v1/products/purchase")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(Collections.emptyList()))
+                )
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("POST /api/v1/products/purchase - Invalid Input")
     void purchaseProducts_invalidInput() throws Exception {
-        mockMvc.perform(post("/api/v1/products/purchase")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("[{}]"))
+        mockMvc.perform(
+                        post("/api/v1/products/purchase")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("[{}]")
+                )
                 .andExpect(status().isBadRequest());
     }
+
 }
