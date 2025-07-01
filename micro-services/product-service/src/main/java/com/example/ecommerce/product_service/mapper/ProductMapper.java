@@ -2,7 +2,7 @@ package com.example.ecommerce.product_service.mapper;
 
 import com.example.ecommerce.product_service.entities.Category;
 import com.example.ecommerce.product_service.entities.Product;
-import com.example.ecommerce.product_service.model.ProductPurchaseResponse;
+import com.example.ecommerce.product_service.model.ProductPurchaseResponseDTO;
 import com.example.ecommerce.product_service.model.ProductRequestDTO;
 import com.example.ecommerce.product_service.model.ProductResponseDTO;
 import org.springframework.stereotype.Component;
@@ -42,8 +42,8 @@ public class ProductMapper {
         );
     }
 
-    public ProductPurchaseResponse productToProductPurchaseResponse(Product product, double quantity) {
-        return new ProductPurchaseResponse(
+    public ProductPurchaseResponseDTO productToProductPurchaseResponseDTO(Product product, double quantity) {
+        return new ProductPurchaseResponseDTO(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
