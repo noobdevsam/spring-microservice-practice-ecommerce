@@ -3,7 +3,7 @@ package com.example.ecommerce.product_service.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record ProductPurchaseRequest(
+public record ProductPurchaseRequestDTO(
         @NotNull(message = "Product ID is mandatory")
         Integer productId,
 
