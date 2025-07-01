@@ -12,7 +12,7 @@ CREATE TABLE product
     name               VARCHAR(255)       NULL,
     `description`      VARCHAR(255)       NULL,
     available_quantity DOUBLE             NOT NULL,
-    price              DECIMAL            NULL,
+    price NUMERIC(38, 2) NULL,
     category_id        INT                NULL,
     CONSTRAINT pk_product PRIMARY KEY (id)
 );
