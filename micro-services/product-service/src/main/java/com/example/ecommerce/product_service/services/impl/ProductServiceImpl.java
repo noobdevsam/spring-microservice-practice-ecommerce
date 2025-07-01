@@ -1,5 +1,6 @@
 package com.example.ecommerce.product_service.services.impl;
 
+import com.example.ecommerce.product_service.entities.Product;
 import com.example.ecommerce.product_service.exceptions.ProductPurchaseException;
 import com.example.ecommerce.product_service.mapper.ProductMapper;
 import com.example.ecommerce.product_service.model.ProductPurchaseRequestDTO;
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,59 +69,66 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductPurchaseResponseDTO> performPurchaseProducts(
             List<ProductPurchaseRequestDTO> productRequestDTOs
     ) {
-        // Extract product IDs from the purchase request DTOs
-        var productIds = productRequestDTOs.stream()
-                .map(ProductPurchaseRequestDTO::productId)
-                .toList();
+        // Map productId to request for quick lookup
+        Map<Integer, ProductPurchaseRequestDTO> requestMap = productRequestDTOs
+                .stream()
+                .collect(
+                        Collectors.toMap(ProductPurchaseRequestDTO::productId, dto -> dto)
+                );
 
-        // Retrieve products from the repository based on the provided IDs
+        // Fetch all products in a single query
+        List<Integer> productIds = new ArrayList<>(requestMap.keySet());
         var storedProducts = productRepository.findAllByIdInOrderById(productIds);
 
-        // Check if all requested products are found
-        if (productIds.size() != storedProducts.size()) {
+        // Validate all products are found
+        if (storedProducts.size() != productIds.size()) {
             throw new ProductPurchaseException("Some products not found for purchase");
         }
 
-        // Sort the purchase requests by product ID for consistent processing
-        var storedRequests = productRequestDTOs
-                .stream()
-                .sorted(
-                        Comparator.comparing(ProductPurchaseRequestDTO::productId)
-                )
-                .toList();
-
-        // Initialize a list to store the response DTOs for purchased products
-        var purchasedProducts = new ArrayList<ProductPurchaseResponseDTO>();
-
-        // Process each product and its corresponding purchase request
-        for (int i = 0; i < storedProducts.size(); i++) {
-            var storedProduct = storedProducts.get(i);
-            var productRequest = storedRequests.get(i);
-
-            // Check if there is enough stock for the requested quantity
-            if (storedProduct.getAvailableQuantity() < productRequest.quantity()) {
+        // Validate stock and update quantities
+        for (Product product : storedProducts) {
+            ProductPurchaseRequestDTO request = requestMap.get(product.getId());
+            if (product.getAvailableQuantity() < request.quantity()) {
                 throw new ProductPurchaseException(
-                        "Not enough stock for product ID: " + productRequest.productId()
+                        "Not enough stock for product ID: " + product.getId()
                 );
             }
-
-            // Update the available quantity of the product
-            var newAvailableQuantity = storedProduct.getAvailableQuantity() - productRequest.quantity();
-            storedProduct.setAvailableQuantity(newAvailableQuantity);
-
-            // Save the updated product back to the repository
-            productRepository.save(storedProduct);
-
-            // Add the purchase details to the response list
-            purchasedProducts.add(
-                    productMapper.productToProductPurchaseResponseDTO(
-                            storedProduct,
-                            productRequest.quantity()
-                    )
-            );
+            product.setAvailableQuantity(product.getAvailableQuantity() - request.quantity());
         }
 
-        // Return the list of purchased product details
-        return purchasedProducts;
+        // Batch save all updated products
+        productRepository.saveAll(storedProducts);
+
+        // Map to response DTOs
+        return storedProducts.stream()
+                .map(product -> {
+                    var quantity = requestMap.get(product.getId()).quantity();
+                    return productMapper.productToProductPurchaseResponseDTO(product, quantity);
+                })
+                .collect(Collectors.toList());
+
+        /*
+        The updated `performPurchaseProducts` method is more efficient and maintainable due to these reasons:
+
+        - Map for Fast Lookup: It uses a `Map` to associate product IDs with their purchase requests, allowing O(1) access
+            when matching products to requests.
+        - Batch Database Operations: It fetches all products in a single query and saves all updates in one batch,
+            reducing database round-trips.
+        - No Sorting Needed: By using a map, it avoids sorting lists, which saves processing time.
+        - Streamlined Logic: The code is more concise and easier to read, making maintenance simpler.
+
+        Procedure Explanation:
+        ----------------------
+        1. Map Requests: Converts the list of purchase requests into a `Map` keyed by product ID for quick access.
+        2. Fetch Products: Retrieves all products matching the requested IDs in a single database call.
+        3. Validation: Checks if all requested products exist. If not, throws an exception.
+        4. Stock Check & Update: Iterates through each product, checks if enough stock is available, and updates the
+            quantity. If stock is insufficient, throws an exception.
+        5. Batch Save: Saves all updated products back to the database in one operation.
+        6. Prepare Response: Maps each updated product to a response DTO, including the purchased quantity,
+            and returns the list.
+
+        This approach minimizes database interactions and improves performance, especially when handling multiple products in a single purchase.
+        * */
     }
 }
