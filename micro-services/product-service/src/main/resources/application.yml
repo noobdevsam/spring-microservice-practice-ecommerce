@@ -1,0 +1,16 @@
+spring:
+    application:
+        name: product-service
+    
+    # temporary
+    cloud:
+        config:
+            enabled: false
+
+server:
+    port: 8082
+
+# temporary
+eureka:
+    client:
+        enabled: false
