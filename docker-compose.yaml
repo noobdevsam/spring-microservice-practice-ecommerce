@@ -19,9 +19,22 @@ services:
             - microservices-net
         restart: unless-stopped
     
+    ms-db-mongodb:
+        container_name: ms-db-mongodb
+        image: mongo:latest
+        volumes:
+            - mongo-data:/data/db
+        ports:
+            - "27017:27017"
+        networks:
+            - microservices-net
+        restart: unless-stopped
+    
     mail-dev:
         container_name: ms-mail-dev
         image: maildev/maildev:latest
+        volumes:
+            - maildev-data:/data
         ports:
             - "1080:1080"
             - "1025:1025"
@@ -32,3 +45,5 @@ networks:
         driver: bridge
 volumes:
     mysql-data:
+    mongo-data:
+    maildev-data:
