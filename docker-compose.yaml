@@ -1,20 +1,32 @@
 services:
-    ms-db-mysqldb:
-        container_name: ms-db-mysql
+    ms-db-mysql-product:
+        container_name: ms-db-mysql-product
         image: mysql:latest
         environment:
             MYSQL_ROOT_PASSWORD: password
             MYSQL_DATABASE: productdb
             MYSQL_USER: productadmin
             MYSQL_PASSWORD: password
-        #           MYSQL_DATABASE2: productdb2
-        #           MYSQL_USER2: productadmin
-        #           MYSQL_PASSWORD2: password
-        #           and so on...
         volumes:
             - mysql-data:/var/lib/mysql
         ports:
             - "3306:3306"
+        networks:
+            - microservices-net
+        restart: unless-stopped
+    
+    ms-db-mysql-order:
+        container_name: ms-db-mysql-order
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: orderdb
+            MYSQL_USER: orderadmin
+            MYSQL_PASSWORD: password
+        volumes:
+            - mysql-data:/var/lib/mysql
+        ports:
+            - "3307:3306"
         networks:
             - microservices-net
         restart: unless-stopped
