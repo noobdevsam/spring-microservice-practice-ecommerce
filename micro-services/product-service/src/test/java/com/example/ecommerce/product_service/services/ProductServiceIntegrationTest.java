@@ -124,7 +124,10 @@ class ProductServiceIntegrationTest {
     @Test
     @DisplayName("Should handle empty purchase request list")
     void performPurchaseProducts_emptyList() {
-        assertTrue(productService.performPurchaseProducts(List.of()).isEmpty());
+        assertThrows(
+                ProductPurchaseException.class,
+                () -> productService.performPurchaseProducts(List.of())
+        );
     }
 
     @Test
