@@ -230,11 +230,10 @@ class ProductServiceImplTest {
     @Test
     @DisplayName("Should handle empty purchase request list")
     void performPurchaseProducts_emptyList() {
-        var result = productService.performPurchaseProducts(
-                Collections.emptyList()
+        assertThrows(
+                ProductPurchaseException.class,
+                () -> productService.performPurchaseProducts(Collections.emptyList())
         );
-
-        assertTrue(result.isEmpty());
     }
 
     @Test
