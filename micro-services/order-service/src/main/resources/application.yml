@@ -1,0 +1,29 @@
+spring:
+    application:
+        name: product-service
+    jpa:
+        hibernate:
+            ddl-auto: update
+        database: mysql
+    datasource:
+        url: jdbc:mysql://${OS_HOST_ADDRESS:localhost}:${OS_HOST_PORT:3307}/${OS_DB:orderdb}
+        username: ${OS_DB_USER:orderadmin}
+        password: ${OS_DB_PASS:password}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    
+    # kafka configuration to be added later
+    
+    # temporary
+    cloud:
+        config:
+            enabled: false
+
+server:
+    port: 8083
+
+# temporary
+eureka:
+    client:
+        enabled: false
+
+# (application: config:) to be added later
