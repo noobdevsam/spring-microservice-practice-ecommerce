@@ -42,15 +42,45 @@ services:
             - microservices-net
         restart: unless-stopped
     
-    mail-dev:
-        container_name: ms-mail-dev
-        image: maildev/maildev:latest
-        volumes:
-            - maildev-data:/data
+    #    mail-dev:
+    #        container_name: ms-mail-dev
+    #        image: maildev/maildev:latest
+    #        ports:
+    #            - "1080:1080"
+    #            - "1025:1025"
+    
+    ms-zookeeper:
+        container_name: ms-zookeeper
+        image: bitnami/zookeeper:latest
         ports:
-            - "1080:1080"
-            - "1025:1025"
-
+            - "22181:2181"
+        environment:
+            ZOO_PORT_NUMBER: 2181
+            ZOO_TICK_TIME: 2000
+            ZOO_SERVER_ID: 1
+            ALLOW_ANONYMOUS_LOGIN: yes
+        networks:
+            - microservices-net
+    
+    ms-kafka:
+        container_name: ms-kafka
+        image: bitnami/kafka:latest
+        ports:
+            - "9092:9092"
+        depends_on:
+            - ms-zookeeper
+        environment:
+            KAFKA_CFG_ZOOKEEPER_CONNECT: ms-zookeeper:2181
+            KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+            KAFKA_CFG_LISTENERS: PLAINTEXT://localhost:9092, CONTROLLER://:9093
+            KAFKA_CFG_PROCESS_ROLES: broker,controller
+            KAFKA_CFG_NODE_ID: 0
+            KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@ms-kafka:9093
+            KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+        networks:
+            - microservices-net
+    
+    # only zipkin server left to be added
 
 networks:
     microservices-net:
