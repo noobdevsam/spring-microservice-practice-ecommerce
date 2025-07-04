@@ -19,6 +19,9 @@ public class OrderProducerServiceImpl implements OrderProducerService {
 
     @Override
     public void sendOrderConfirmation(OrderConfirmationDTO orderConfirmationDTO) {
+        if (orderConfirmationDTO == null) {
+            throw new IllegalArgumentException("Payload must not be null");
+        }
         log.info("Sending order confirmation.....");
 
         Message<OrderConfirmationDTO> message = MessageBuilder
