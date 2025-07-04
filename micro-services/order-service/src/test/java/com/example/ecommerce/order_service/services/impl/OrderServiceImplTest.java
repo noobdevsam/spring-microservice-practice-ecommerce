@@ -1,4 +1,4 @@
-package com.example.ecommerce.order_service.services;
+package com.example.ecommerce.order_service.services.impl;
 
 import com.example.ecommerce.order_service.entities.CustomerOrder;
 import com.example.ecommerce.order_service.exceptions.BusinessException;
@@ -7,7 +7,9 @@ import com.example.ecommerce.order_service.feign_client.PaymentFeignClient;
 import com.example.ecommerce.order_service.mappers.OrderMapper;
 import com.example.ecommerce.order_service.models.*;
 import com.example.ecommerce.order_service.repositories.OrderRepository;
-import com.example.ecommerce.order_service.services.impl.OrderServiceImpl;
+import com.example.ecommerce.order_service.services.OrderLineService;
+import com.example.ecommerce.order_service.services.OrderProducerService;
+import com.example.ecommerce.order_service.services.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,18 +29,25 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
+
     @Mock
     private OrderMapper orderMapper;
+
     @Mock
     private OrderRepository orderRepository;
+
     @Mock
     private CustomerFeignClient customerFeignClient;
+
     @Mock
     private PaymentFeignClient paymentFeignClient;
+
     @Mock
     private ProductService productService;
+
     @Mock
     private OrderLineService orderLineService;
+
     @Mock
     private OrderProducerService orderProducerService;
 
@@ -73,7 +82,9 @@ class OrderServiceImplTest {
         when(orderRequestDTO.reference()).thenReturn("REF123");
 
         Integer orderId = orderService.createOrder(orderRequestDTO);
+
         assertEquals(100, orderId);
+
         verify(paymentFeignClient).requestOrderPayment(any(PaymentRequestDTO.class));
         verify(orderProducerService).sendOrderConfirmation(any(OrderConfirmationDTO.class));
     }
@@ -82,7 +93,9 @@ class OrderServiceImplTest {
     void createOrder_customerNotFound_throwsBusinessException() {
         when(orderRequestDTO.customerId()).thenReturn(String.valueOf(2));
         when(customerFeignClient.findCustomerById(String.valueOf(2))).thenReturn(Optional.empty());
+
         BusinessException ex = assertThrows(BusinessException.class, () -> orderService.createOrder(orderRequestDTO));
+
         assertTrue(ex.getMessage().contains("Customer not found"));
     }
 
@@ -90,12 +103,15 @@ class OrderServiceImplTest {
     void findAllOrders_returnsMappedList() {
         var order1 = mock(CustomerOrder.class);
         var order2 = mock(CustomerOrder.class);
-        OrderResponseDTO dto1 = mock(OrderResponseDTO.class);
-        OrderResponseDTO dto2 = mock(OrderResponseDTO.class);
+        var dto1 = mock(OrderResponseDTO.class);
+        var dto2 = mock(OrderResponseDTO.class);
+
         when(orderRepository.findAll()).thenReturn(List.of(order1, order2));
         when(orderMapper.orderToOrderResponseDTO(order1)).thenReturn(dto1);
         when(orderMapper.orderToOrderResponseDTO(order2)).thenReturn(dto2);
+
         List<OrderResponseDTO> result = orderService.findAllOrders();
+
         assertEquals(2, result.size());
         assertTrue(result.contains(dto1));
         assertTrue(result.contains(dto2));
@@ -103,17 +119,20 @@ class OrderServiceImplTest {
 
     @Test
     void findOrderById_found() {
-        var order = mock(CustomerOrder.class);
-        OrderResponseDTO dto = mock(OrderResponseDTO.class);
+        var dto = mock(OrderResponseDTO.class);
+
         when(orderRepository.findById(1)).thenReturn(Optional.of(order));
         when(orderMapper.orderToOrderResponseDTO(order)).thenReturn(dto);
-        OrderResponseDTO result = orderService.findOrderById(1);
+
+        var result = orderService.findOrderById(1);
+
         assertEquals(dto, result);
     }
 
     @Test
     void findOrderById_notFound_throwsEntityNotFoundException() {
         when(orderRepository.findById(99)).thenReturn(Optional.empty());
+
         assertThrows(EntityNotFoundException.class, () -> orderService.findOrderById(99));
     }
 
@@ -132,7 +151,9 @@ class OrderServiceImplTest {
         when(orderRequestDTO.reference()).thenReturn("REFEMPTY");
 
         Integer orderId = orderService.createOrder(orderRequestDTO);
+
         assertEquals(101, orderId);
+
         verify(orderLineService, never()).saveOrderLine(any());
     }
 
@@ -149,6 +170,7 @@ class OrderServiceImplTest {
         when(orderRequestDTO.paymentMethod()).thenReturn(PaymentMethod.CREDIT_CARD);
         when(order.getReference()).thenReturn("REFPAY");
         doThrow(new RuntimeException("Payment failed")).when(paymentFeignClient).requestOrderPayment(any());
+
         assertThrows(RuntimeException.class, () -> orderService.createOrder(orderRequestDTO));
     }
 }
