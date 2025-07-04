@@ -1,4 +1,4 @@
-package com.example.ecommerce.order_service.services.impl;
+package com.example.ecommerce.order_service.services;
 
 import com.example.ecommerce.order_service.entities.CustomerOrder;
 import com.example.ecommerce.order_service.models.OrderLineRequestDTO;
@@ -6,7 +6,6 @@ import com.example.ecommerce.order_service.models.OrderLineResponseDTO;
 import com.example.ecommerce.order_service.models.PaymentMethod;
 import com.example.ecommerce.order_service.repositories.OrderLineRepository;
 import com.example.ecommerce.order_service.repositories.OrderRepository;
-import com.example.ecommerce.order_service.services.OrderLineService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class OrderLineServiceImplIntegrationTest {
+class OrderLineServiceIntegrationTest {
 
     @Autowired
     private OrderLineService orderLineService;
