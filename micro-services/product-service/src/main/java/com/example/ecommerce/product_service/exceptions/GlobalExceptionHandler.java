@@ -1,6 +1,5 @@
-package com.example.ecommerce.product_service.controllers;
+package com.example.ecommerce.product_service.exceptions;
 
-import com.example.ecommerce.product_service.exceptions.ProductPurchaseException;
 import com.example.ecommerce.product_service.model.ErrorResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
