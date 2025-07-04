@@ -1,6 +1,5 @@
-package com.example.ecommerce.customerservice.controllers;
+package com.example.ecommerce.customerservice.exceptions;
 
-import com.example.ecommerce.customerservice.exceptions.CustomerNotFoundException;
 import com.example.ecommerce.customerservice.model.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
