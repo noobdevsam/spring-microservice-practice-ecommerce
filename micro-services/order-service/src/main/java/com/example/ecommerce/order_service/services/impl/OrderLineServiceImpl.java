@@ -8,7 +8,9 @@ import com.example.ecommerce.order_service.services.OrderLineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,8 +29,11 @@ public class OrderLineServiceImpl implements OrderLineService {
 
     @Override
     public List<OrderLineResponseDTO> findAllByOrderId(Integer orderId) {
-        return orderLineRepository
-                .findAllByOrderId(orderId)
+        return Optional.ofNullable(
+                        orderLineRepository.findAllByOrderId(orderId)
+                ).orElseGet(
+                        Collections::emptyList
+                )
                 .stream()
                 .map(orderLineMapper::orderLineToOrderLineResponseDTO)
                 .collect(Collectors.toList());
