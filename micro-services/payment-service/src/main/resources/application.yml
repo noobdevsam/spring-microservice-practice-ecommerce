@@ -17,7 +17,7 @@ spring:
     #            key-serializer: org.apache.kafka.common.serialization.StringSerializer
     #            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     #            properties:
-    #                spring.json.type.mapping: paymentConfirmationDTO:com.example.ecommerce.payment_service.models.PaymentConfirmationDTO
+    #                spring.json.type.mapping: paymentNotificationRequestDTO:com.example.ecommerce.payment_service.models.PaymentNotificationRequestDTO
     
     # temporary
     cloud:
