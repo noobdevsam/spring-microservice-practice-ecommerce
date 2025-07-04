@@ -31,6 +31,22 @@ services:
             - microservices-net
         restart: unless-stopped
     
+    ms-db-mysql-payment:
+        container_name: ms-db-mysql-payment
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: paymentdb
+            MYSQL_USER: paymentadmin
+            MYSQL_PASSWORD: password
+        volumes:
+            - mysql-data-payment:/var/lib/mysql
+        ports:
+            - "3308:3306"
+        networks:
+            - microservices-net
+        restart: unless-stopped
+    
     ms-db-mongodb:
         container_name: ms-db-mongodb
         image: mongo:latest
@@ -86,5 +102,6 @@ volumes:
     kafka-conf:
     mysql-data-product:
     mysql-data-order:
+    mysql-data-payment:
     mongo-data:
     maildev-data:
