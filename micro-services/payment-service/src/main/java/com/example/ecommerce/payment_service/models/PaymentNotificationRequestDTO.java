@@ -2,7 +2,7 @@ package com.example.ecommerce.payment_service.models;
 
 import java.math.BigDecimal;
 
-public record PaymentNotificationDTO(
+public record PaymentNotificationRequestDTO(
         String orderReference,
         BigDecimal amount,
         PaymentMethod paymentMethod,
