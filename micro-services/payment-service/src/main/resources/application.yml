@@ -11,13 +11,13 @@ spring:
         password: ${PMS_DB_PASS:password}
         driver-class-name: com.mysql.cj.jdbc.Driver
     
-    #    kafka:
-    #        producer:
-    #            bootstrap-servers: ${PMS_KAFKA_HOST:localhost}:9092
-    #            key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    #            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    #            properties:
-    #                spring.json.type.mapping: paymentNotificationRequestDTO:com.example.ecommerce.payment_service.models.PaymentNotificationRequestDTO
+    kafka:
+        producer:
+            bootstrap-servers: ${PMS_KAFKA_HOST:localhost}:9092
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+            properties:
+                spring.json.type.mapping: paymentNotificationRequestDTO:com.example.ecommerce.payment_service.models.PaymentNotificationRequestDTO
     
     # temporary
     cloud:
@@ -32,9 +32,9 @@ eureka:
     client:
         enabled: false
 
-application:
-    config:
-        # URI for other service, used for inter-service communication
-        # Note: These URI are placeholder and should be replaced with actual service URL in a production environment.
-        # Port is set to match the default port of the respective service but later can be changed as needed toward gateway-service.
-        product-url: http://localhost:8082/api/v1/products
+#application:
+#    config:
+#        # URI for other service, used for inter-service communication
+#        # Note: These URI are placeholder and should be replaced with actual service URL in a production environment.
+#        # Port is set to match the default port of the respective service but later can be changed as needed toward gateway-service.
+#        product-url: http://localhost:8082/api/v1/products

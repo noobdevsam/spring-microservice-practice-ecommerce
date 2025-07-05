@@ -21,6 +21,9 @@ public class PaymentController {
     public ResponseEntity<Integer> createPayment(
             @RequestBody @Valid PaymentRequestDTO paymentRequestDTO
     ) {
+        if (paymentRequestDTO == null) {
+            throw new IllegalArgumentException("Payment request cannot be null");
+        }
         return ResponseEntity.ok(paymentService.createPayment(paymentRequestDTO));
     }
 
