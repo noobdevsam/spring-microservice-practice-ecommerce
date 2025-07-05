@@ -35,6 +35,6 @@ public class PaymentServiceImpl implements PaymentService {
                 )
         );
 
-        return paymentRequestDTO.id();
+        return payment.getId();
     }
 }
