@@ -1,4 +1,4 @@
-package com.example.ecommerce.controllers;
+package com.example.ecommerce.payment_service.controllers;
 
 import com.example.ecommerce.payment_service.models.PaymentRequestDTO;
 import com.example.ecommerce.payment_service.services.PaymentService;
