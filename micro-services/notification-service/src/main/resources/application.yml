@@ -7,16 +7,16 @@ spring:
             uri: mongodb://${MONGODB_HOST_ADDRESS:localhost}:27017
             database: ${MONGODB_NS_DATABASE:notification-service}
     
-    #    kafka:
-    #        consumer:
-    #            bootstrap-servers: localhost:9092
-    #            group-id: paymentGroup, orderGroup
-    #            auto-offset-reset: earliest
-    #            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    #            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-    #            properties:
-    #                spring.json.trusted.packages: '*'
-    #                spring.json.type.mapping: orderConfirmationDTO:com.example.ecommerce.order_service.models.OrderConfirmationDTO
+    kafka:
+        consumer:
+            bootstrap-servers: localhost:9092
+            group-id: paymentGroup, orderGroup
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: '*'
+                spring.json.type.mapping: orderConfirmationDTO:com.example.ecommerce.order_service.models.OrderConfirmationDTO, paymentConfirmationDTO:com.example.ecommerce.order_service.models.PaymentConfirmationDTO
     
     mail:
         host: localhost
