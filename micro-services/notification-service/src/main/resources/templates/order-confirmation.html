@@ -58,11 +58,11 @@
 <div class="container">
     <h1>Order Details</h1>
     <p>
-        <!--/*@thymesVar id="customerName" type="OrderConfirmationDTO"*/-->
+        <!--/*@thymesVar id="customerName" type="String"*/-->
         Customer: <span th:text="${customerName}"></span>
     </p>
     <p>
-        <!--/*@thymesVar id="orderReference" type="OrderConfirmationDTO"*/-->
+        <!--/*@thymesVar id="orderReference" type="String"*/-->
         Order ID: <span th:text="${orderReference}"></span>
     </p>
 
@@ -87,7 +87,7 @@
     </table>
 
     <div class="footer">
-        <!--/*@thymesVar id="totalAmount" type="OrderConfirmationDTO"*/-->
+        <!--/*@thymesVar id="totalAmount" type="BigDecimal"*/-->
         <p>Total Amount: $<span th:text="${totalAmount}"></span></p>
         <p>This is an automated message. Please do not reply to this email.</p>
     </div>
