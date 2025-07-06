@@ -52,7 +52,30 @@ public class NotificationsConsumerServiceImpl implements NotificationsConsumerSe
 
     @KafkaListener(topics = "order-topic")
     @Override
-    public void consumeOrderConfirmationNotifications(OrderConfirmationDTO orderConfirmationDTO) throws MessagingException {
+    public void consumeOrderConfirmationNotifications(
+            OrderConfirmationDTO orderConfirmationDTO
+    ) throws MessagingException {
+
+        log.info("Consuming the message from order-topic Topic :: {}", orderConfirmationDTO);
+
+        notificationRepository.save(
+                Notification.builder()
+                        .notificationType(NotificationType.ORDER_CONFIRMATION)
+                        .notificationDate(LocalDateTime.now())
+                        .orderConfirmationDTO(orderConfirmationDTO)
+                        .build()
+        );
+
+        var customerName = orderConfirmationDTO.customerDTO().firstName() + " " + orderConfirmationDTO.customerDTO().lastName();
+
+        emailService.sendOrderConfirmationEmail(
+                orderConfirmationDTO.customerDTO().email(),
+                customerName,
+                orderConfirmationDTO.totalAmount(),
+                orderConfirmationDTO.orderReference(),
+                orderConfirmationDTO.productDTOs()
+        );
 
     }
+
 }
