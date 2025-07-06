@@ -59,11 +59,11 @@
     <h1>Order Details</h1>
     <p>
         <!--/*@thymesVar id="customerName" type="String"*/-->
-        Customer: <span th:text="${customerName}"></span>
+        Customer: <span th:text="${customerName}">[CustomerName]</span>
     </p>
     <p>
         <!--/*@thymesVar id="orderReference" type="String"*/-->
-        Order ID: <span th:text="${orderReference}"></span>
+        Order ID: <span th:text="${orderReference}">[OrderReference]</span>
     </p>
 
     <table>
@@ -78,9 +78,9 @@
         <!--/*@thymesVar id="productDTOs" type="List<ProductDTO>"*/-->
         <tr th:each="productDTO : ${productDTOs}">
 
-            <td th:text="${productDTO.name}">ProductName</td>
-            <td th:text="${productDTO.quantity}">5456</td>
-            <td th:text="${productDTO.price}">3132.13</td>
+            <td th:text="${productDTO.name}">[ProductName]</td>
+            <td th:text="${productDTO.quantity}">[5456]</td>
+            <td th:text="${productDTO.price}">[3132.13]</td>
 
         </tr>
         </tbody>
@@ -88,7 +88,7 @@
 
     <div class="footer">
         <!--/*@thymesVar id="totalAmount" type="BigDecimal"*/-->
-        <p>Total Amount: $<span th:text="${totalAmount}"></span></p>
+        <p>Total Amount: $<span th:text="${totalAmount}">[TotalAmount]</span></p>
         <p>This is an automated message. Please do not reply to this email.</p>
     </div>
 </div>
