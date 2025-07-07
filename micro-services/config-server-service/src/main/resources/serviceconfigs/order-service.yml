@@ -23,7 +23,8 @@ application:
     config:
         # URIs for other services, used for inter-service communication
         # Note: These URIs are placeholders and should be replaced with actual service URLs in a production environment.
-        # Ports are set to match the default ports of the respective services but later can be changed as needed toward gateway-service.
-        customer-url: http://localhost:8081/api/v1/customers
-        product-url: http://localhost:8082/api/v1/products
-        payment-url: http://localhost:8084/api/v1/payments
+        
+        # redirecting towards the gateway service
+        customer-url: http://localhost:8080/api/v1/customers
+        product-url: http://localhost:8080/api/v1/products
+        payment-url: http://localhost:8080/api/v1/payments

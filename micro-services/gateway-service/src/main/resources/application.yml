@@ -1,6 +1,5 @@
 spring:
     application:
-        name: notification-service
-    
+        name: gateway-service
     config:
         import: optional:configserver:http://localhost:8086
