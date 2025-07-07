@@ -1,6 +1,15 @@
 spring:
     application:
         name: config-server-service
+    
+    profiles:
+        active: native
+    
+    cloud:
+        config:
+            server:
+                native:
+                    search-locations: classpath:/serviceconfigs
 
 server:
     port: 8086

@@ -1,0 +1,8 @@
+spring:
+    data:
+        mongodb:
+            uri: mongodb://${MONGODB_HOST_ADDRESS:localhost}:27017
+            database: ${MONGODB_CS_DATABASE:customer-service}
+
+server:
+    port: 8081
