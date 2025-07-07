@@ -1,41 +1,5 @@
 spring:
     application:
         name: order-service
-    jpa:
-        hibernate:
-            ddl-auto: update
-        database: mysql
-    datasource:
-        url: jdbc:mysql://${OS_HOST_ADDRESS:localhost}:${OS_HOST_PORT:3307}/${OS_DB:orderdb}
-        username: ${OS_DB_USER:orderadmin}
-        password: ${OS_DB_PASS:password}
-        driver-class-name: com.mysql.cj.jdbc.Driver
-    kafka:
-        producer:
-            bootstrap-servers: ${OS_KAFKA_HOST:localhost}:9092
-            key-serializer: org.apache.kafka.common.serialization.StringSerializer
-            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-            properties:
-                spring.json.type.mapping: orderConfirmationDTO:com.example.ecommerce.order_service.models.OrderConfirmationDTO
-    
-    # temporary
-    cloud:
-        config:
-            enabled: false
-
-server:
-    port: 8083
-
-# temporary
-eureka:
-    client:
-        enabled: false
-
-application:
     config:
-        # URIs for other services, used for inter-service communication
-        # Note: These URIs are placeholders and should be replaced with actual service URLs in a production environment.
-        # Ports are set to match the default ports of the respective services but later can be changed as needed toward gateway-service.
-        customer-url: http://localhost:8081/api/v1/customers
-        product-url: http://localhost:8082/api/v1/products
-        payment-url: http://localhost:8084/api/v1/payments
+        import: optional:configserver:http://localhost:8086
