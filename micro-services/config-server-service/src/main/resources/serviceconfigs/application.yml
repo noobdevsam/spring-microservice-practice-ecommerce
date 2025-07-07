@@ -1,1 +1,12 @@
+name:
+    value: sampleconfigserver
+
+spring:
+    cloud:
+        config:
+            override-system-properties: false
+
 # for eureka client
+
+
+# for tracing
