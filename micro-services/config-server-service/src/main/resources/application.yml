@@ -1,0 +1,6 @@
+spring:
+    application:
+        name: config-server-service
+
+server:
+    port: 8086
