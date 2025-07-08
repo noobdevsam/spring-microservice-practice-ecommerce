@@ -64,6 +64,8 @@ services:
         ports:
             - "2080:1080"
             - "2025:1025"
+        volumes:
+            - maildev-data:/data
         networks:
             - microservices-net
         restart: unless-stopped
@@ -92,7 +94,16 @@ services:
             - microservices-net
         restart: unless-stopped
     
-    # only zipkin server left to be added
+    ms-zipkin-server:
+        container_name: ms-zipkin-server
+        image: openzipkin/zipkin:latest
+        ports:
+            - "9411:9411"
+        volumes:
+            - zipkin-data:/data
+        networks:
+            - microservices-net
+        restart: unless-stopped
 
 networks:
     microservices-net:
@@ -105,3 +116,4 @@ volumes:
     mysql-data-payment:
     mongo-data:
     maildev-data:
+    zipkin-data:
