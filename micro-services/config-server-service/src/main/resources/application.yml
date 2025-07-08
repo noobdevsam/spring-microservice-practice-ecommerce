@@ -1,15 +1,24 @@
+# This is the configuration file for the Spring Boot application `config-server-service`.
+# It defines the application's name, active profiles, cloud configuration server settings,
+# and the server port.
+
 spring:
     application:
+        # The name of the Spring Boot application.
         name: config-server-service
     
     profiles:
+        # Specifies the active profile for the application.
+        # The `native` profile indicates that the configuration is stored locally.
         active: native
     
     cloud:
         config:
             server:
                 native:
+                    # Specifies the location of the configuration files when using the `native` profile.
                     search-locations: classpath:/serviceconfigs
 
 server:
+    # The port on which the application will run.
     port: 8086

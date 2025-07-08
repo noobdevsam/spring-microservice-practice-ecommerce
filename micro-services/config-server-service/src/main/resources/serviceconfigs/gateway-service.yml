@@ -1,3 +1,7 @@
+# This is the configuration file for the Spring Boot application `gateway-service`.
+# It defines the API gateway settings, including route configurations for various microservices
+# and the server port configuration.
+
 spring:
     cloud:
         gateway:
@@ -5,32 +9,49 @@ spring:
                 webflux:
                     discovery:
                         locator:
+                            # Enables the discovery locator for dynamic routing.
                             enabled: true
                     routes:
+                        # Route configuration for the `customer-service`.
                         -   id: customer-service
+                            # The URI for the `customer-service` using load balancing.
                             uri: lb:http://CUSTOMER-SERVICE
                             predicates:
+                                # Defines the path predicate for routing requests to `customer-service`.
                                 - Path=/api/v1/customers/**
                         
+                        # Route configuration for the `order-service`.
                         -   id: order-service
+                            # The URI for the `order-service` using load balancing.
                             uri: lb:http://ORDER-SERVICE
                             predicates:
+                                # Defines the path predicate for routing requests to `order-service`.
                                 - Path=/api/v1/orders/**
                         
+                        # Route configuration for the `order-lines-service`.
                         -   id: order-lines-service
+                            # The URI for the `order-lines-service` using load balancing.
                             uri: lb:http://ORDER-SERVICE
                             predicates:
+                                # Defines the path predicate for routing requests to `order-lines-service`.
                                 - Path=/api/v1/order-lines/**
                         
+                        # Route configuration for the `product-service`.
                         -   id: product-service
+                            # The URI for the `product-service` using load balancing.
                             uri: lb:http://PRODUCT-SERVICE
                             predicates:
+                                # Defines the path predicate for routing requests to `product-service`.
                                 - Path=/api/v1/products/**
                         
+                        # Route configuration for the `payment-service`.
                         -   id: payment-service
+                            # The URI for the `payment-service` using load balancing.
                             uri: lb:http://PAYMENT-SERVICE
                             predicates:
+                                # Defines the path predicate for routing requests to `payment-service`.
                                 - Path=/api/v1/payments/**
 
 server:
+    # The port on which the API gateway application will run.
     port: 8080

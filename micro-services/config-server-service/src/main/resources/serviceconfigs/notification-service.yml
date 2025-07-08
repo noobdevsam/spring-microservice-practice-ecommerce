@@ -1,33 +1,57 @@
+# This is the configuration file for the Spring Boot application `notification-service`.
+# It defines MongoDB connection settings, Kafka consumer configurations, mail server properties,
+# and the server port configuration.
+
 spring:
     data:
         mongodb:
+            # The URI for connecting to the MongoDB database.
+            # Defaults to `localhost` on port `27017` if `MONGODB_HOST_ADDRESS` is not set.
             uri: mongodb://${MONGODB_HOST_ADDRESS:localhost}:27017
+            # The name of the MongoDB database to use.
+            # Defaults to `notification-service` if `MONGODB_NS_DATABASE` is not set.
             database: ${MONGODB_NS_DATABASE:notification-service}
     
     kafka:
         consumer:
+            # The Kafka bootstrap servers for connecting to the Kafka cluster.
             bootstrap-servers: localhost:9092
+            # The group IDs for the Kafka consumer.
             group-id: paymentGroup, orderGroup
+            # Specifies the offset reset policy for the consumer.
             auto-offset-reset: earliest
+            # The class used to deserialize the key of Kafka messages.
             key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            # The class used to deserialize the value of Kafka messages.
             value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
             properties:
+                # Specifies trusted packages for JSON deserialization.
                 spring.json.trusted.packages: '*'
+                # Maps specific JSON types to Java classes for deserialization.
                 spring.json.type.mapping: orderConfirmationDTO:com.example.ecommerce.notification_service.models.OrderConfirmationDTO, paymentConfirmationDTO:com.example.ecommerce.notification_service.models.PaymentConfirmationDTO
     
     mail:
+        # The host address of the mail server.
         host: localhost
+        # The port on which the mail server is running.
         port: 2025
         properties:
             mail:
                 smtp:
+                    # Specifies trusted hosts for the SMTP server.
                     trust: "*"
+                # Enables authentication for the mail server.
                 auth: true
                 starttls:
+                    # Enables STARTTLS for secure communication.
                     enable: true
+                # Sets the connection timeout for the mail server in milliseconds.
                 connectiontimeout: 5000
+                # Sets the timeout for reading from the mail server in milliseconds.
                 timeout: 5000
+                # Sets the timeout for writing to the mail server in milliseconds.
                 writetimeout: 5000
 
 server:
+    # The port on which the application will run.
     port: 8085

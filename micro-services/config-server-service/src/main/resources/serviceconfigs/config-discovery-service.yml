@@ -1,11 +1,19 @@
+# This is the configuration file for the Spring Boot application.
+# It defines Eureka server settings and the server port configuration.
+
 eureka:
     instance:
+        # The hostname of the Eureka instance.
         hostname: localhost
     client:
+        # Indicates whether this application should register itself with Eureka.
         register-with-eureka: false
+        # Indicates whether this application should fetch the Eureka registry.
         fetch-registry: false
         service-url:
+            # The default Eureka server URL for service registration and discovery.
             defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
 
 server:
+    # The port on which the Eureka server will run.
     port: 8761
