@@ -3,3 +3,11 @@ spring:
         name: gateway-service
     config:
         import: optional:configserver:http://localhost:8086
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8088/realms/ecommerce-microservices
+                    
+                    # access on postman
+                    # token-uri: http://localhost:8088/realms/ecommerce-microservices/protocol/openid-connect/token
