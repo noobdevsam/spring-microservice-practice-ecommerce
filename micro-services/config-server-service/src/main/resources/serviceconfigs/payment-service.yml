@@ -1,28 +1,45 @@
+# This is the configuration file for the Spring Boot application `payment-service`.
+# It defines JPA and Hibernate settings, MySQL database connection properties,
+# Kafka producer configurations, and the server port configuration.
+
 spring:
     jpa:
         hibernate:
+            # Specifies the strategy for schema generation.
+            # `update` ensures the schema is updated without dropping existing data.
             ddl-auto: update
+        # Specifies the database type used by the application.
         database: mysql
     datasource:
+        # The JDBC URL for connecting to the MySQL database.
+        # Defaults to `localhost` on port `3308` with the database name `paymentdb` if environment variables are not set.
         url: jdbc:mysql://${PMS_HOST_ADDRESS:localhost}:${PMS_HOST_PORT:3308}/${PMS_DB:paymentdb}
+        # The username for the MySQL database connection.
         username: ${PMS_DB_USER:paymentadmin}
+        # The password for the MySQL database connection.
         password: ${PMS_DB_PASS:password}
+        # The fully qualified name of the MySQL JDBC driver class.
         driver-class-name: com.mysql.cj.jdbc.Driver
     
     kafka:
         producer:
+            # The Kafka bootstrap servers for connecting to the Kafka cluster.
             bootstrap-servers: ${PMS_KAFKA_HOST:localhost}:9092
+            # The class used to serialize the key of Kafka messages.
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            # The class used to serialize the value of Kafka messages.
             value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
             properties:
+                # Maps specific JSON types to Java classes for serialization.
                 spring.json.type.mapping: paymentNotificationRequestDTO:com.example.ecommerce.payment_service.models.PaymentNotificationRequestDTO
 
 server:
+    # The port on which the application will run.
     port: 8084
 
 #application:
 #    config:
-#        # URI for other service, used for inter-service communication
-#        # Note: These URI are placeholder and should be replaced with actual service URL in a production environment.
+#        # URI for other service, used for inter-service communication.
+#        # Note: These URI are placeholders and should be replaced with actual service URLs in a production environment.
 #        # Port is set to match the default port of the respective service but later can be changed as needed toward gateway-service.
 #        product-url: http://localhost:8082/api/v1/products
