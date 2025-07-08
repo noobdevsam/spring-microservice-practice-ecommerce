@@ -1,6 +1,13 @@
+# This is the configuration file for the Spring Boot application `config-discovery-service`.
+# It defines the application's name and specifies the configuration server to be used.
+
 spring:
     application:
+        # The name of the Spring Boot application.
         name: config-discovery-service
     
     config:
+        # Specifies the configuration server to import properties from.
+        # The `optional` prefix indicates that the application will not fail to start
+        # if the configuration server is unavailable.
         import: optional:configserver:http://localhost:8086
