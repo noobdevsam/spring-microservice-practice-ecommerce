@@ -1,13 +1,16 @@
+# Configuration file for the Gateway Service application.
+
 spring:
     application:
-        name: gateway-service
+        name: gateway-service # Specifies the name of the Spring Boot application.
     config:
-        import: optional:configserver:http://localhost:8086
+        import: optional:configserver:http://localhost:8086 # Imports configuration from the Config Server at the specified URL. The import is optional.
     security:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://localhost:8088/realms/ecommerce-microservices
+                    issuer-uri: http://localhost:8088/realms/ecommerce-microservices # Defines the issuer URI for JWT validation in the OAuth2 resource server.
                     
-                    # access on postman
+                    # Access token endpoint for testing in Postman.
+                    # Uncomment the following line if needed:
                     # token-uri: http://localhost:8088/realms/ecommerce-microservices/protocol/openid-connect/token
