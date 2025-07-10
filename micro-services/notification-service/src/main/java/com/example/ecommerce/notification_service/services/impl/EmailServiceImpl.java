@@ -22,14 +22,29 @@ import java.util.Map;
 import static com.example.ecommerce.notification_service.models.EmailTemplates.ORDER_CONFIRMATION;
 import static com.example.ecommerce.notification_service.models.EmailTemplates.PAYMENT_CONFIRMATION;
 
+/**
+ * Implementation of the EmailService interface for sending emails.
+ * This service uses Spring's JavaMailSender and Thymeleaf for email templating.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    private final JavaMailSender mailSender;
-    private final SpringTemplateEngine templateEngine;
+    private final JavaMailSender mailSender; // JavaMailSender instance for sending emails
+    private final SpringTemplateEngine templateEngine; // Thymeleaf template engine for processing email templates
 
+    /**
+     * Sends an email using the specified template and variables.
+     *
+     * @param destinationEmail The recipient's email address.
+     * @param mimeMessage      The MimeMessage object for the email.
+     * @param messageHelper    Helper for configuring the email message.
+     * @param templateName     The name of the Thymeleaf template to use.
+     * @param variables        A map of variables to populate the template.
+     * @param templateEngine   The Thymeleaf template engine.
+     * @param mailSender       The JavaMailSender instance.
+     */
     private static void sendEmail(
             String destinationEmail,
             MimeMessage mimeMessage,
@@ -55,6 +70,15 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
+    /**
+     * Sends a payment success email asynchronously.
+     *
+     * @param destinationEmail The recipient's email address.
+     * @param customerName     The name of the customer.
+     * @param amount           The payment amount.
+     * @param orderReference   The order reference number.
+     * @throws MessagingException If an error occurs while sending the email.
+     */
     @Async
     @Override
     public void sendPaymentSuccessEmail(
@@ -63,7 +87,6 @@ public class EmailServiceImpl implements EmailService {
             BigDecimal amount,
             String orderReference
     ) throws MessagingException {
-
         var mimeMessage = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(
                 mimeMessage,
@@ -92,6 +115,16 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
+    /**
+     * Sends an order confirmation email asynchronously.
+     *
+     * @param destinationEmail The recipient's email address.
+     * @param customerName     The name of the customer.
+     * @param amount           The total order amount.
+     * @param orderReference   The order reference number.
+     * @param productDTOs      A list of products included in the order.
+     * @throws MessagingException If an error occurs while sending the email.
+     */
     @Async
     @Override
     public void sendOrderConfirmationEmail(
@@ -101,7 +134,6 @@ public class EmailServiceImpl implements EmailService {
             String orderReference,
             List<ProductDTO> productDTOs
     ) throws MessagingException {
-
         var mimeMessage = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(
                 mimeMessage,

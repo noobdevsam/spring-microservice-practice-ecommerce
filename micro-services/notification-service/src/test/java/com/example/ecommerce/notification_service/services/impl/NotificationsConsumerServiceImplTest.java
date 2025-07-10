@@ -19,6 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the NotificationsConsumerServiceImpl class.
+ * These tests verify the behavior of notification consumption methods using mocked dependencies.
+ */
 class NotificationsConsumerServiceImplTest {
 
     @Mock
@@ -30,11 +34,21 @@ class NotificationsConsumerServiceImplTest {
     @InjectMocks
     private NotificationsConsumerServiceImpl notificationsConsumerService;
 
+    /**
+     * Initializes mocks before each test.
+     * Ensures dependencies are properly injected into the service.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Tests the consumption of payment success notifications with valid input.
+     * Verifies that the notification is saved and an email is sent.
+     *
+     * @throws MessagingException if an error occurs during email sending
+     */
     @Test
     void consumePaymentSuccessNotifications_validInput_savesNotificationAndSendsEmail() throws MessagingException {
         var dto = new PaymentConfirmationDTO(
@@ -48,19 +62,16 @@ class NotificationsConsumerServiceImplTest {
 
         notificationsConsumerService.consumePaymentSuccessNotifications(dto);
 
-        verify(
-                notificationRepository,
-                times(1)
-        ).save(any(Notification.class));
-
-        verify(
-                emailService,
-                times(1)
-        ).sendPaymentSuccessEmail(
+        verify(notificationRepository, times(1)).save(any(Notification.class));
+        verify(emailService, times(1)).sendPaymentSuccessEmail(
                 eq("test@example.com"), eq("John Doe"), eq(BigDecimal.TEN), eq("ORDER123")
         );
     }
 
+    /**
+     * Tests the consumption of payment success notifications with a null DTO.
+     * Verifies that a NullPointerException is thrown.
+     */
     @Test
     void consumePaymentSuccessNotifications_nullDTO_throwsException() {
         assertThrows(
@@ -69,6 +80,12 @@ class NotificationsConsumerServiceImplTest {
         );
     }
 
+    /**
+     * Tests the consumption of payment success notifications when the email service throws an exception.
+     * Verifies that the exception propagates.
+     *
+     * @throws MessagingException if an error occurs during email sending
+     */
     @Test
     void consumePaymentSuccessNotifications_emailServiceThrows_exceptionPropagates() throws MessagingException {
         var dto = new PaymentConfirmationDTO(
@@ -80,9 +97,7 @@ class NotificationsConsumerServiceImplTest {
                 "test@testd.ds"
         );
 
-        doThrow(
-                new MessagingException("fail")
-        ).when(emailService).sendPaymentSuccessEmail(
+        doThrow(new MessagingException("fail")).when(emailService).sendPaymentSuccessEmail(
                 any(), any(), any(), any()
         );
 
@@ -91,12 +106,15 @@ class NotificationsConsumerServiceImplTest {
                 () -> notificationsConsumerService.consumePaymentSuccessNotifications(dto)
         );
 
-        verify(
-                notificationRepository,
-                times(1)
-        ).save(any(Notification.class));
+        verify(notificationRepository, times(1)).save(any(Notification.class));
     }
 
+    /**
+     * Tests the consumption of order confirmation notifications with valid input.
+     * Verifies that the notification is saved and an email is sent.
+     *
+     * @throws MessagingException if an error occurs during email sending
+     */
     @Test
     void consumeOrderConfirmationNotifications_validInput_savesNotificationAndSendsEmail() throws MessagingException {
         var customer = new CustomerDTO("54", "John", "Doe", "test@example.com");
@@ -111,19 +129,16 @@ class NotificationsConsumerServiceImplTest {
 
         notificationsConsumerService.consumeOrderConfirmationNotifications(dto);
 
-        verify(
-                notificationRepository,
-                times(1)
-        ).save(any(Notification.class));
-
-        verify(
-                emailService,
-                times(1)
-        ).sendOrderConfirmationEmail(
+        verify(notificationRepository, times(1)).save(any(Notification.class));
+        verify(emailService, times(1)).sendOrderConfirmationEmail(
                 eq("test@example.com"), eq("John Doe"), eq(BigDecimal.TEN), eq("ORDER123"), eq(products)
         );
     }
 
+    /**
+     * Tests the consumption of order confirmation notifications with a null DTO.
+     * Verifies that a NullPointerException is thrown.
+     */
     @Test
     void consumeOrderConfirmationNotifications_nullDTO_throwsException() {
         assertThrows(
@@ -132,6 +147,12 @@ class NotificationsConsumerServiceImplTest {
         );
     }
 
+    /**
+     * Tests the consumption of order confirmation notifications when the email service throws an exception.
+     * Verifies that the exception propagates.
+     *
+     * @throws MessagingException if an error occurs during email sending
+     */
     @Test
     void consumeOrderConfirmationNotifications_emailServiceThrows_exceptionPropagates() throws MessagingException {
         var customer = new CustomerDTO("98", "John", "Doe", "test@example.com");
@@ -144,9 +165,7 @@ class NotificationsConsumerServiceImplTest {
                 products
         );
 
-        doThrow(
-                new MessagingException("fail")
-        ).when(emailService).sendOrderConfirmationEmail(
+        doThrow(new MessagingException("fail")).when(emailService).sendOrderConfirmationEmail(
                 any(), any(), any(), any(), any()
         );
 
@@ -155,12 +174,13 @@ class NotificationsConsumerServiceImplTest {
                 () -> notificationsConsumerService.consumeOrderConfirmationNotifications(dto)
         );
 
-        verify(
-                notificationRepository,
-                times(1)
-        ).save(any(Notification.class));
+        verify(notificationRepository, times(1)).save(any(Notification.class));
     }
 
+    /**
+     * Tests the consumption of order confirmation notifications with a missing customer.
+     * Verifies that a NullPointerException is thrown.
+     */
     @Test
     void consumeOrderConfirmationNotifications_missingCustomer_throwsException() {
         var dto = new OrderConfirmationDTO(
@@ -174,4 +194,3 @@ class NotificationsConsumerServiceImplTest {
     }
 
 }
-

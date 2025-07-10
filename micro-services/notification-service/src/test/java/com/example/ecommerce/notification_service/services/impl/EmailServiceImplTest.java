@@ -23,6 +23,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the EmailServiceImpl class.
+ * These tests verify the behavior of email sending methods using mocked dependencies.
+ */
 class EmailServiceImplTest {
 
     @Mock
@@ -34,6 +38,9 @@ class EmailServiceImplTest {
     @InjectMocks
     private EmailServiceImpl emailService;
 
+    /**
+     * Sets up the test environment by initializing mocks and configuring behavior for the JavaMailSender.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -43,6 +50,12 @@ class EmailServiceImplTest {
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
     }
 
+    /**
+     * Tests the sendPaymentSuccessEmail method with valid input.
+     * Verifies that the email is sent successfully without throwing exceptions.
+     *
+     * @throws MessagingException if an error occurs during email sending
+     */
     @Test
     void sendPaymentSuccessEmail_validInput_sendsEmail() throws MessagingException {
         when(
@@ -65,6 +78,10 @@ class EmailServiceImplTest {
         );
     }
 
+    /**
+     * Tests the sendPaymentSuccessEmail method with a null email.
+     * Verifies that an IllegalArgumentException is thrown.
+     */
     @Test
     void sendPaymentSuccessEmail_nullEmail_throwsException() {
         assertThrows(
@@ -73,6 +90,12 @@ class EmailServiceImplTest {
         );
     }
 
+    /**
+     * Tests the sendOrderConfirmationEmail method with valid input.
+     * Verifies that the email is sent successfully without throwing exceptions.
+     *
+     * @throws MessagingException if an error occurs during email sending
+     */
     @Test
     void sendOrderConfirmationEmail_validInput_sendsEmail() throws MessagingException {
         when(
@@ -95,6 +118,12 @@ class EmailServiceImplTest {
         );
     }
 
+    /**
+     * Tests the sendOrderConfirmationEmail method with an empty product list.
+     * Verifies that the email is sent successfully without throwing exceptions.
+     *
+     * @throws MessagingException if an error occurs during email sending
+     */
     @Test
     void sendOrderConfirmationEmail_emptyProductList_sendsEmail() throws MessagingException {
         when(
@@ -112,6 +141,10 @@ class EmailServiceImplTest {
         verify(javaMailSender, times(1)).send((MimeMessage) any());
     }
 
+    /**
+     * Tests the sendOrderConfirmationEmail method with a null product list.
+     * Verifies that an IllegalArgumentException is thrown.
+     */
     @Test
     void sendOrderConfirmationEmail_nullProductList_throwsException() {
         assertThrows(
@@ -120,6 +153,10 @@ class EmailServiceImplTest {
         );
     }
 
+    /**
+     * Tests the sendOrderConfirmationEmail method with a null email.
+     * Verifies that an IllegalArgumentException is thrown.
+     */
     @Test
     void sendOrderConfirmationEmail_nullEmail_throwsException() {
         List<ProductDTO> products = Collections.emptyList();

@@ -7,6 +7,10 @@
     <title>Order Details</title>
 
     <style>
+        /*
+         * Styles for the email template.
+         * Includes basic styling for the body, container, headings, table, and footer.
+         */
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
@@ -58,11 +62,17 @@
 <div class="container">
     <h1>Order Details</h1>
     <p>
-        <!--/*@thymesVar id="customerName" type="String"*/-->
+        <!--
+         * Displays the customer's name.
+         * `customerName` is a Thymeleaf variable of type String.
+         -->
         Customer: <span th:text="${customerName}">[CustomerName]</span>
     </p>
     <p>
-        <!--/*@thymesVar id="orderReference" type="String"*/-->
+        <!--
+         * Displays the order reference ID.
+         * `orderReference` is a Thymeleaf variable of type String.
+         -->
         Order ID: <span th:text="${orderReference}">[OrderReference]</span>
     </p>
 
@@ -75,19 +85,24 @@
         </tr>
         </thead>
         <tbody>
-        <!--/*@thymesVar id="productDTOs" type="List<ProductDTO>"*/-->
+        <!--
+         * Iterates over a list of ProductDTO objects.
+         * `productDTOs` is a Thymeleaf variable of type List<ProductDTO>.
+         * Each `productDTO` contains `name`, `quantity`, and `price` fields.
+         -->
         <tr th:each="productDTO : ${productDTOs}">
-
             <td th:text="${productDTO.name}">[ProductName]</td>
             <td th:text="${productDTO.quantity}">[5456]</td>
             <td th:text="${productDTO.price}">[3132.13]</td>
-
         </tr>
         </tbody>
     </table>
 
     <div class="footer">
-        <!--/*@thymesVar id="amount" type="BigDecimal"*/-->
+        <!--
+         * Displays the total amount for the order.
+         * `amount` is a Thymeleaf variable of type BigDecimal.
+         -->
         <p>Total Amount: $<span th:text="${amount}">[TotalAmount]</span></p>
         <p>This is an automated message. Please do not reply to this email.</p>
     </div>
