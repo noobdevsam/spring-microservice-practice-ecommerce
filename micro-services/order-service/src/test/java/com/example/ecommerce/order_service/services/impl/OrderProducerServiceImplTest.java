@@ -19,6 +19,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the OrderProducerServiceImpl class.
+ * This class tests the functionality of sending order confirmation messages via Kafka.
+ */
 class OrderProducerServiceImplTest {
 
     @Mock
@@ -29,6 +33,10 @@ class OrderProducerServiceImplTest {
 
     private OrderConfirmationDTO orderConfirmationDTO;
 
+    /**
+     * Sets up the test environment before each test.
+     * Initializes mocks and test data.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -44,9 +52,12 @@ class OrderProducerServiceImplTest {
         );
     }
 
+    /**
+     * Tests sending an order confirmation message successfully.
+     * Verifies that the message is sent and the payload matches the expected data.
+     */
     @Test
     void sendOrderConfirmation_sendsMessageSuccessfully() {
-        // set fields if needed
         orderProducerService.sendOrderConfirmation(orderConfirmationDTO);
         ArgumentCaptor<Message> captor = ArgumentCaptor.forClass(Message.class);
         verify(kafkaTemplate, times(1)).send(captor.capture());
@@ -56,6 +67,10 @@ class OrderProducerServiceImplTest {
         assertEquals("order-topic", sentMessage.getHeaders().get("kafka_topic"));
     }
 
+    /**
+     * Tests sending an order confirmation message with a null DTO.
+     * Verifies that an IllegalArgumentException is thrown and no message is sent.
+     */
     @Test
     void sendOrderConfirmation_withNullDTO() {
         assertThrows(
@@ -66,6 +81,10 @@ class OrderProducerServiceImplTest {
         verify(kafkaTemplate, never()).send(any(Message.class));
     }
 
+    /**
+     * Tests handling exceptions thrown by the KafkaTemplate during message sending.
+     * Verifies that the exception is propagated correctly.
+     */
     @Test
     void sendOrderConfirmation_kafkaTemplateThrowsException() {
         doThrow(new RuntimeException("Kafka error")).when(kafkaTemplate).send(any(Message.class));
