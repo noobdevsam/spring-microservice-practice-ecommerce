@@ -1,5 +1,11 @@
+# This is the configuration file for the Spring Boot application `customer-service`.
+# It defines the application name and configuration import settings.
+
 spring:
     application:
+        # Specifies the name of the Spring Boot application.
         name: customer-service
     config:
+        # Imports additional configuration from a Config Server.
+        # The `optional` keyword ensures the application can start even if the Config Server is unavailable.
         import: optional:configserver:http://localhost:8086
