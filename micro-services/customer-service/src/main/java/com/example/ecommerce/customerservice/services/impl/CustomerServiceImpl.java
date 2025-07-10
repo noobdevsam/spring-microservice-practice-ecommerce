@@ -62,7 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Boolean existsCustomerById(String id) {
-        return customerRepository.findById(id).isPresent();
+        return customerRepository.existsById(id);
     }
 
     /**
@@ -90,9 +90,10 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(
                         () -> new CustomerNotFoundException(String.format("Customer not found with id: %s", customerRequestDTO.id()))
                 );
-
-        mergeCustomer(customer, customerRequestDTO);
-        customerRepository.save(customer);
+        // Merge updated details into the existing customer entity
+        customerRepository.save(
+                mergeCustomer(customer, customerRequestDTO)
+        );
     }
 
     /**
@@ -100,9 +101,10 @@ public class CustomerServiceImpl implements CustomerService {
      *
      * @param customer           the existing customer entity
      * @param customerRequestDTO the data transfer object containing updated customer details
+     * @return the updated customer entity
      */
     @Override
-    public void mergeCustomer(Customer customer, CustomerRequestDTO customerRequestDTO) {
+    public Customer mergeCustomer(Customer customer, CustomerRequestDTO customerRequestDTO) {
         if (StringUtils.isNotBlank(customerRequestDTO.firstName())) {
             customer.setFirstName(customerRequestDTO.firstName());
         }
@@ -118,6 +120,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerRequestDTO.address() != null) {
             customer.setAddress(customerRequestDTO.address());
         }
+        return customer;
     }
 
     /**

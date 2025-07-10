@@ -18,7 +18,7 @@ public interface CustomerService {
 
     void updateCustomer(CustomerRequestDTO customerRequestDTO);
 
-    void mergeCustomer(Customer customer, CustomerRequestDTO customerRequestDTO);
+    Customer mergeCustomer(Customer customer, CustomerRequestDTO customerRequestDTO);
 
     void deleteCustomerById(String id);
 }
