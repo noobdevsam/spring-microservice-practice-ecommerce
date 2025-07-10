@@ -17,6 +17,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for the OrderLineService class.
+ * This class tests the functionality of saving and retrieving order lines.
+ */
 @SpringBootTest
 @Transactional
 class OrderLineServiceIntegrationTest {
@@ -34,6 +38,10 @@ class OrderLineServiceIntegrationTest {
 
     private Integer customerOrderId;
 
+    /**
+     * Sets up the test environment before each test.
+     * Clears the repositories and initializes test data.
+     */
     @BeforeEach
     void setUp() {
         orderLineRepository.deleteAll();
@@ -53,6 +61,10 @@ class OrderLineServiceIntegrationTest {
         orderLineRequestDTO = new OrderLineRequestDTO(null, customerOrderId, 1, 2.0);
     }
 
+    /**
+     * Tests saving an order line and retrieving all order lines by order ID.
+     * Verifies that the saved order line is correctly retrieved.
+     */
     @Test
     void testSaveOrderLineAndFindAllByOrderId_Success() {
         var id = orderLineService.saveOrderLine(orderLineRequestDTO);
@@ -65,6 +77,10 @@ class OrderLineServiceIntegrationTest {
         assertEquals(2.0, result.getFirst().quantity());
     }
 
+    /**
+     * Tests retrieving order lines by an order ID that does not exist.
+     * Verifies that an empty list is returned.
+     */
     @Test
     void testFindAllByOrderId_EmptyList() {
         List<OrderLineResponseDTO> result = orderLineService.findAllByOrderId(999);
@@ -73,6 +89,10 @@ class OrderLineServiceIntegrationTest {
         assertTrue(result.isEmpty());
     }
 
+    /**
+     * Tests retrieving order lines by a null order ID.
+     * Verifies that an empty list is returned.
+     */
     @Test
     void testFindAllByOrderId_NullId() {
         List<OrderLineResponseDTO> result = orderLineService.findAllByOrderId(null);
@@ -81,6 +101,10 @@ class OrderLineServiceIntegrationTest {
         assertTrue(result.isEmpty());
     }
 
+    /**
+     * Tests saving an order line with a null request.
+     * Verifies that a NullPointerException is thrown.
+     */
     @Test
     void testSaveOrderLine_NullRequest() {
         assertThrows(
@@ -89,6 +113,10 @@ class OrderLineServiceIntegrationTest {
         );
     }
 
+    /**
+     * Tests saving multiple order lines for the same order ID.
+     * Verifies that all saved order lines are correctly retrieved.
+     */
     @Test
     @Rollback
     void testMultipleOrderLinesForSameOrderId() {
@@ -103,6 +131,10 @@ class OrderLineServiceIntegrationTest {
         assertEquals(2, result.size());
     }
 
+    /**
+     * Tests saving an order line with invalid data.
+     * Verifies that an exception is thrown.
+     */
     @Test
     void testSaveOrderLine_InvalidData() {
         var invalidDto = new OrderLineRequestDTO(null, null, null, null);
