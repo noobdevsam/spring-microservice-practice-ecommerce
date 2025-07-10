@@ -20,6 +20,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the CustomerServiceImpl class.
+ * These tests verify the behavior of the service methods using mocked dependencies.
+ */
 class CustomerServiceImplTest {
 
     @Mock
@@ -31,14 +35,19 @@ class CustomerServiceImplTest {
     @InjectMocks
     private CustomerServiceImpl customerService;
 
+    /**
+     * Initializes mocks before each test.
+     * This ensures that dependencies are properly injected into the service.
+     */
     @BeforeEach
     void setUp() {
-        // Initialize mocks before each test
-        // This is necessary to inject the mocks into the service
-        // and to avoid NullPointerExceptions.
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Tests the retrieval of all customers.
+     * Verifies that the service returns a list of customers.
+     */
     @Test
     void findAllCustomers_ReturnsList() {
         var customer = Customer.builder()
@@ -49,22 +58,19 @@ class CustomerServiceImplTest {
                 .build();
         var dto = new CustomerResponseDTO("1", "John", "Doe", "john@email.com", null);
 
-        when(
-                customerRepository.findAll()
-        ).thenReturn(
-                Collections.singletonList(customer)
-        );
-        when(
-                customerMapper.customerToCustomerResponseDTO(customer)
-        ).thenReturn(dto);
+        when(customerRepository.findAll()).thenReturn(Collections.singletonList(customer));
+        when(customerMapper.customerToCustomerResponseDTO(customer)).thenReturn(dto);
 
         var result = customerService.findAllCustomers();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).firstName())
-                .isEqualTo("John");
+        assertThat(result.get(0).firstName()).isEqualTo("John");
     }
 
+    /**
+     * Tests the retrieval of a customer by ID when the customer exists.
+     * Verifies that the service returns the correct customer details.
+     */
     @Test
     void findCustomerById_Found() {
         var customer = Customer.builder()
@@ -75,55 +81,51 @@ class CustomerServiceImplTest {
                 .build();
         var dto = new CustomerResponseDTO("1", "Jane", "Smith", "jane@email.com", null);
 
-        when(
-                customerRepository.findById("1")
-        ).thenReturn(
-                Optional.of(customer)
-        );
-        when(
-                customerMapper.customerToCustomerResponseDTO(customer)
-        ).thenReturn(dto);
+        when(customerRepository.findById("1")).thenReturn(Optional.of(customer));
+        when(customerMapper.customerToCustomerResponseDTO(customer)).thenReturn(dto);
 
         var result = customerService.findCustomerById("1");
-        assertThat(result.firstName())
-                .isEqualTo("Jane");
+        assertThat(result.firstName()).isEqualTo("Jane");
     }
 
+    /**
+     * Tests the retrieval of a customer by ID when the customer does not exist.
+     * Verifies that a CustomerNotFoundException is thrown.
+     */
     @Test
     void findCustomerById_NotFound() {
-        when(
-                customerRepository.findById("1")
-        ).thenReturn(
-                Optional.empty()
-        );
+        when(customerRepository.findById("1")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-                () -> customerService.findCustomerById("1")
-        ).isInstanceOf(CustomerNotFoundException.class);
+        assertThatThrownBy(() -> customerService.findCustomerById("1"))
+                .isInstanceOf(CustomerNotFoundException.class);
     }
 
+    /**
+     * Tests the existence check for a customer by ID when the customer exists.
+     * Verifies that the service returns true.
+     */
     @Test
     void existsCustomerById_True() {
-        when(
-                customerRepository.findById("1")
-        ).thenReturn(
-                Optional.of(new Customer())
-        );
+        when(customerRepository.findById("1")).thenReturn(Optional.of(new Customer()));
 
         assertThat(customerService.existsCustomerById("1")).isTrue();
     }
 
+    /**
+     * Tests the existence check for a customer by ID when the customer does not exist.
+     * Verifies that the service returns false.
+     */
     @Test
     void existsCustomerById_False() {
-        when(
-                customerRepository.findById("1")
-        ).thenReturn(
-                Optional.empty()
-        );
+        when(customerRepository.findById("1")).thenReturn(Optional.empty());
 
         assertThat(customerService.existsCustomerById("1")).isFalse();
     }
 
+    /**
+     * Tests the creation of a customer.
+     * Verifies that the service returns the ID of the newly created customer.
+     */
     @Test
     void createCustomer_Success() {
         var dto = new CustomerRequestDTO(null, "Sam", "Wise", "sam@email.com", null);
@@ -134,17 +136,17 @@ class CustomerServiceImplTest {
                 .email("sam@email.com")
                 .build();
 
-        when(
-                customerMapper.customerRequestDTOToCustomer(dto)
-        ).thenReturn(customer);
-        when(
-                customerRepository.save(any(Customer.class))
-        ).thenReturn(customer);
+        when(customerMapper.customerRequestDTOToCustomer(dto)).thenReturn(customer);
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
         var id = customerService.createCustomer(dto);
         assertThat(id).isEqualTo("123");
     }
 
+    /**
+     * Tests the update of a customer when the customer exists.
+     * Verifies that the service updates the customer details correctly.
+     */
     @Test
     void updateCustomer_UpdatesFields() {
         var dto = new CustomerRequestDTO("1", "Updated", "Name", "updated@email.com", null);
@@ -155,42 +157,35 @@ class CustomerServiceImplTest {
                 .email("old@email.com")
                 .build();
 
-        when(
-                customerRepository.findById("1")
-        ).thenReturn(
-                Optional.of(customer)
-        );
-        when(
-                customerRepository.save(any(Customer.class))
-        ).thenReturn(customer);
+        when(customerRepository.findById("1")).thenReturn(Optional.of(customer));
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
         customerService.updateCustomer(dto);
 
         verify(customerRepository).save(customer);
     }
 
+    /**
+     * Tests the update of a customer when the customer does not exist.
+     * Verifies that a CustomerNotFoundException is thrown.
+     */
     @Test
     void updateCustomer_NotFound() {
         var dto = new CustomerRequestDTO("notfound", "A", "B", "c@email.com", null);
 
-        when(
-                customerRepository.findById("notfound")
-        ).thenReturn(
-                Optional.empty()
-        );
+        when(customerRepository.findById("notfound")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-                () -> customerService.updateCustomer(dto)
-        ).isInstanceOf(CustomerNotFoundException.class);
+        assertThatThrownBy(() -> customerService.updateCustomer(dto))
+                .isInstanceOf(CustomerNotFoundException.class);
     }
 
+    /**
+     * Tests the deletion of a customer by ID when the customer exists.
+     * Verifies that the service removes the customer from the repository.
+     */
     @Test
     void deleteCustomerById_Success() {
-        when(
-                customerRepository.findById("1")
-        ).thenReturn(
-                Optional.of(new Customer())
-        );
+        when(customerRepository.findById("1")).thenReturn(Optional.of(new Customer()));
 
         doNothing().when(customerRepository).deleteById("1");
 
@@ -199,18 +194,16 @@ class CustomerServiceImplTest {
         verify(customerRepository).deleteById("1");
     }
 
+    /**
+     * Tests the deletion of a customer by ID when the customer does not exist.
+     * Verifies that a CustomerNotFoundException is thrown.
+     */
     @Test
     void deleteCustomerById_NotFound() {
-        when(
-                customerRepository.findById("notfound")
-        ).thenReturn(
-                Optional.empty()
-        );
+        when(customerRepository.findById("notfound")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-                () -> customerService.deleteCustomerById("notfound")
-        ).isInstanceOf(CustomerNotFoundException.class);
+        assertThatThrownBy(() -> customerService.deleteCustomerById("notfound"))
+                .isInstanceOf(CustomerNotFoundException.class);
     }
 
 }
-
