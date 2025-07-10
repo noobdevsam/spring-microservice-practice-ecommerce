@@ -15,6 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * Integration tests for the CustomerServiceImpl class.
+ * These tests verify the behavior of the service methods in a Spring Boot test environment.
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -22,14 +26,26 @@ class CustomerServiceImplIT {
 
     @Autowired
     private CustomerService customerService;
+
     @Autowired
     private CustomerRepository customerRepository;
 
+    /**
+     * Cleans the database by deleting all records before each test.
+     */
     @BeforeEach
     void cleanDb() {
         customerRepository.deleteAll();
     }
 
+    /**
+     * Builds a CustomerRequestDTO object for testing purposes.
+     *
+     * @param firstName the first name of the customer
+     * @param lastName  the last name of the customer
+     * @param email     the email of the customer
+     * @return a CustomerRequestDTO object with the provided details
+     */
     private CustomerRequestDTO buildCustomerRequest(String firstName, String lastName, String email) {
         var address = Address.builder()
                 .street("123 Main St")
@@ -39,6 +55,10 @@ class CustomerServiceImplIT {
         return new CustomerRequestDTO(null, firstName, lastName, email, address);
     }
 
+    /**
+     * Tests the creation and retrieval of a customer.
+     * Verifies that the customer is created and can be retrieved with the correct details.
+     */
     @Test
     void createAndFindCustomer_Success() {
         var request = buildCustomerRequest("John", "Doe", "john.doe@email.com");
@@ -56,6 +76,10 @@ class CustomerServiceImplIT {
                 .isEqualTo("john.doe@email.com");
     }
 
+    /**
+     * Tests the retrieval of all customers.
+     * Verifies that all created customers are returned.
+     */
     @Test
     void findAllCustomers_ReturnsList() {
         customerService.createCustomer(
@@ -70,6 +94,10 @@ class CustomerServiceImplIT {
         assertThat(all).hasSize(2);
     }
 
+    /**
+     * Tests the update functionality of a customer.
+     * Verifies that the customer details are updated correctly.
+     */
     @Test
     void updateCustomer_UpdatesFields() {
         var id = customerService.createCustomer(
@@ -87,6 +115,10 @@ class CustomerServiceImplIT {
                 .isEqualTo("janet@email.com");
     }
 
+    /**
+     * Tests the deletion of a customer by ID.
+     * Verifies that the customer is removed from the repository.
+     */
     @Test
     void deleteCustomerById_RemovesCustomer() {
         var id = customerService.createCustomer(
@@ -100,6 +132,10 @@ class CustomerServiceImplIT {
         ).isInstanceOf(CustomerNotFoundException.class);
     }
 
+    /**
+     * Tests the retrieval of a non-existing customer.
+     * Verifies that a CustomerNotFoundException is thrown.
+     */
     @Test
     void findCustomerById_NotFound_Throws() {
         assertThatThrownBy(
@@ -107,6 +143,10 @@ class CustomerServiceImplIT {
         ).isInstanceOf(CustomerNotFoundException.class);
     }
 
+    /**
+     * Tests the existence check for a customer by ID.
+     * Verifies that the method correctly identifies existing and non-existing customers.
+     */
     @Test
     void existsCustomerById_Works() {
         var id = customerService.createCustomer(
