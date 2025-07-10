@@ -1,6 +1,11 @@
+# Configuration for the Spring application named "payment-service".
 spring:
     application:
+        # Specifies the name of the application.
         name: payment-service
     config:
+        # Imports configuration from a Config Server running at localhost:8086.
+        # The "optional" prefix indicates that the application will not fail to start
+        # if the Config Server is unavailable.
         import: optional:configserver:http://localhost:8086
-    
+        
