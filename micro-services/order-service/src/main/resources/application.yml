@@ -1,5 +1,11 @@
+# Configuration file for the Order Service application.
+
 spring:
     application:
+        # Specifies the name of the Spring application.
         name: order-service
     config:
+        # Imports configuration from a Config Server running at the specified URL.
+        # The 'optional' prefix indicates that the application can start even if the Config Server is unavailable.
         import: optional:configserver:http://localhost:8086
+        

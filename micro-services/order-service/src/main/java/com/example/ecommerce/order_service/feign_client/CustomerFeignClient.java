@@ -7,15 +7,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
+/**
+ * Feign client interface for interacting with the customer service.
+ * Provides methods for retrieving customer information via REST API calls.
+ */
 @FeignClient(
-        name = "customer-service",
-        url = "${application.config.customer-url}"
+        name = "customer-service", // Specifies the name of the customer service.
+        url = "${application.config.customer-url}" // Configures the base URL for the customer service.
 )
 public interface CustomerFeignClient {
 
+    /**
+     * Retrieves customer details by customer ID.
+     *
+     * @param customerId The ID of the customer to retrieve.
+     * @return An Optional containing the CustomerResponseDTO if the customer exists, or empty if not found.
+     */
     @GetMapping("/{customer-id}")
     Optional<CustomerResponseDTO> findCustomerById(
-            @PathVariable("customer-id") String customerId
+            @PathVariable("customer-id") String customerId // Maps the customer ID path variable.
     );
 
 }

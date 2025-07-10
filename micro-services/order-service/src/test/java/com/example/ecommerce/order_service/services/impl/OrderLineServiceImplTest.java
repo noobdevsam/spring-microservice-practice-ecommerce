@@ -17,6 +17,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the OrderLineServiceImpl class.
+ * This class tests the functionality of saving and retrieving order lines using mocked dependencies.
+ */
 class OrderLineServiceImplTest {
 
     @Mock
@@ -32,6 +36,10 @@ class OrderLineServiceImplTest {
     private OrderLine orderLine;
     private OrderLineResponseDTO orderLineResponseDTO;
 
+    /**
+     * Sets up the test environment before each test.
+     * Initializes mocks and test data.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -49,6 +57,10 @@ class OrderLineServiceImplTest {
         );
     }
 
+    /**
+     * Tests saving an order line successfully.
+     * Verifies that the order line is saved and the correct ID is returned.
+     */
     @Test
     void testSaveOrderLine_Success() {
         when(
@@ -73,6 +85,10 @@ class OrderLineServiceImplTest {
         ).save(orderLine);
     }
 
+    /**
+     * Tests saving an order line with a null request.
+     * Verifies that a NullPointerException is thrown.
+     */
     @Test
     void testSaveOrderLine_NullRequest() {
         assertThrows(
@@ -81,6 +97,10 @@ class OrderLineServiceImplTest {
         );
     }
 
+    /**
+     * Tests retrieving all order lines by a valid order ID.
+     * Verifies that the correct list of order lines is returned.
+     */
     @Test
     void testFindAllByOrderId_Success() {
         List<OrderLine> orderLines = Collections.singletonList(orderLine);
@@ -101,6 +121,10 @@ class OrderLineServiceImplTest {
         ).orderLineToOrderLineResponseDTO(orderLine);
     }
 
+    /**
+     * Tests retrieving order lines by an order ID that does not exist.
+     * Verifies that an empty list is returned.
+     */
     @Test
     void testFindAllByOrderId_EmptyList() {
         when(
@@ -117,6 +141,10 @@ class OrderLineServiceImplTest {
         ).findAllByOrderId(999);
     }
 
+    /**
+     * Tests retrieving order lines by a null order ID.
+     * Verifies that an empty list is returned.
+     */
     @Test
     void testFindAllByOrderId_NullId() {
         when(
@@ -136,6 +164,10 @@ class OrderLineServiceImplTest {
         ).orderLineToOrderLineResponseDTO(any());
     }
 
+    /**
+     * Tests retrieving order lines when the repository returns null.
+     * Verifies that an empty list is returned.
+     */
     @Test
     void testFindAllByOrderId_RepositoryReturnsNull() {
         when(

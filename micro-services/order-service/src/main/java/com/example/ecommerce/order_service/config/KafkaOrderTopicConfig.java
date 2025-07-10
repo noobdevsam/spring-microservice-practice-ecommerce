@@ -6,21 +6,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 /**
- * Configuration class for Kafka topics related to the order service.
- * Defines beans for creating Kafka topics.
+ * Configuration class for defining Kafka topics related to the order service.
+ * This class provides beans for creating and configuring Kafka topics.
  */
 @Configuration
 public class KafkaOrderTopicConfig {
 
     /**
-     * Creates a new Kafka topic named "order-topic".
+     * Creates a Kafka topic named "order-topic".
+     * This topic is used for handling order-related events in the system.
      *
      * @return A NewTopic object representing the "order-topic".
      */
     @Bean
     public NewTopic orderTopic() {
         return TopicBuilder
-                .name("order-topic") // Sets the name of the topic
-                .build(); // Builds the topic configuration
+                .name("order-topic") // Specifies the name of the Kafka topic.
+                .build(); // Builds and returns the topic configuration.
     }
 }
