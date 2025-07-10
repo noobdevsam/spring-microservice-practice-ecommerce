@@ -21,12 +21,21 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    /**
+     * Handles exceptions of type MethodArgumentNotValidException.
+     * This method processes validation errors and constructs an error response.
+     *
+     * @param ex the MethodArgumentNotValidException containing validation errors
+     * @return a ResponseEntity containing an ErrorResponseDTO with validation error details
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex
     ) {
+        // A map to store field names and their corresponding error messages
         var errors = new HashMap<String, String>();
 
+        // Iterate through all validation errors and extract field names and error messages
         ex.getBindingResult().getAllErrors()
                 .forEach(error -> {
                     if (error instanceof FieldError) {
@@ -36,6 +45,7 @@ public class GlobalExceptionHandler {
                     }
                 });
 
+        // Return a BAD_REQUEST response with the error details encapsulated in ErrorResponseDTO
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponseDTO(errors));
