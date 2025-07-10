@@ -22,25 +22,48 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the PaymentService class.
+ * Verifies the behavior of the createPayment method under various conditions.
+ */
 class PaymentServiceTest {
 
+    /**
+     * Mocked instance of PaymentRepository used for testing.
+     */
     @Mock
     private PaymentRepository paymentRepository;
 
+    /**
+     * Mocked instance of PaymentMapper used for testing.
+     */
     @Mock
     private PaymentMapper paymentMapper;
 
+    /**
+     * Mocked instance of NotificationProducerService used for testing.
+     */
     @Mock
     private NotificationProducerService notificationProducerService;
 
+    /**
+     * Injected instance of PaymentServiceImpl being tested.
+     */
     @InjectMocks
     private PaymentServiceImpl paymentService;
 
+    /**
+     * Initializes mocks before each test execution.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Tests the successful creation of a payment.
+     * Verifies that the payment is saved and a notification is sent.
+     */
     @Test
     void createPayment_success() {
         var request = new PaymentRequestDTO(
@@ -65,6 +88,10 @@ class PaymentServiceTest {
         verify(notificationProducerService).sendNotification(any(PaymentNotificationRequestDTO.class));
     }
 
+    /**
+     * Tests the behavior when the CustomerDTO in the request is null.
+     * Verifies that a NullPointerException is thrown.
+     */
     @Test
     void createPayment_nullCustomer_throwsException() {
         var request = new PaymentRequestDTO(
@@ -84,6 +111,10 @@ class PaymentServiceTest {
         );
     }
 
+    /**
+     * Tests the behavior when the PaymentRepository throws an exception.
+     * Verifies that the exception is propagated correctly.
+     */
     @Test
     void createPayment_repositoryThrowsException() {
         var request = new PaymentRequestDTO(
@@ -104,6 +135,10 @@ class PaymentServiceTest {
         );
     }
 
+    /**
+     * Tests the behavior when the NotificationProducerService throws an exception.
+     * Verifies that the exception is propagated correctly.
+     */
     @Test
     void createPayment_notificationThrowsException() {
         var request = new PaymentRequestDTO(
@@ -124,6 +159,10 @@ class PaymentServiceTest {
         assertThrows(RuntimeException.class, () -> paymentService.createPayment(request));
     }
 
+    /**
+     * Tests the content of the notification sent by the NotificationProducerService.
+     * Verifies that the notification contains the correct details.
+     */
     @Test
     void createPayment_checkNotificationContent() {
         var request = new PaymentRequestDTO(

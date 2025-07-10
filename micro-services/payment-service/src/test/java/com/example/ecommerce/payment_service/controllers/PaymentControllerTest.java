@@ -19,19 +19,36 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit tests for the PaymentController class.
+ * Verifies the behavior of the createPayment method under various conditions.
+ */
 class PaymentControllerTest {
 
+    /**
+     * Mocked instance of PaymentService used for testing.
+     */
     @Mock
     private PaymentService paymentService;
 
+    /**
+     * Injected instance of PaymentController being tested.
+     */
     @InjectMocks
     private PaymentController paymentController;
 
+    /**
+     * Initializes mocks before each test execution.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Tests the successful creation of a payment.
+     * Verifies that the response contains the correct status code and payment ID.
+     */
     @Test
     void createPayment_success() {
         var request = new PaymentRequestDTO(
@@ -53,6 +70,10 @@ class PaymentControllerTest {
         verify(paymentService).createPayment(request);
     }
 
+    /**
+     * Tests the behavior when the PaymentService throws an exception.
+     * Verifies that the exception is propagated correctly.
+     */
     @Test
     void createPayment_serviceThrowsException() {
         var request = new PaymentRequestDTO(
@@ -72,6 +93,10 @@ class PaymentControllerTest {
         );
     }
 
+    /**
+     * Tests the behavior when a null request is passed to createPayment.
+     * Verifies that an IllegalArgumentException is thrown.
+     */
     @Test
     void createPayment_nullRequest_throwsException() {
         assertThrows(
@@ -80,6 +105,10 @@ class PaymentControllerTest {
         );
     }
 
+    /**
+     * Tests the behavior when the CustomerDTO in the request is null.
+     * Verifies that a NullPointerException is thrown.
+     */
     @Test
     void createPayment_nullCustomerDTO() {
         PaymentRequestDTO request = new PaymentRequestDTO(
@@ -99,6 +128,10 @@ class PaymentControllerTest {
         );
     }
 
+    /**
+     * Tests the behavior when the payment amount is zero.
+     * Verifies that the response contains the correct status code and payment ID.
+     */
     @Test
     void createPayment_zeroAmount() {
         PaymentRequestDTO request = new PaymentRequestDTO(
@@ -117,6 +150,10 @@ class PaymentControllerTest {
         assertEquals(2, response.getBody());
     }
 
+    /**
+     * Tests the behavior when the payment amount is negative.
+     * Verifies that the response contains the correct status code and payment ID.
+     */
     @Test
     void createPayment_negativeAmount() {
         PaymentRequestDTO request = new PaymentRequestDTO(
