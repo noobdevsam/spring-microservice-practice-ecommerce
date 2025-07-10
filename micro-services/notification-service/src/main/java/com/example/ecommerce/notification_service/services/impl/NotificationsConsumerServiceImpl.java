@@ -15,14 +15,25 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * Implementation of the NotificationsConsumerService interface for consuming notifications from Kafka topics.
+ * This service listens to Kafka topics and processes payment and order confirmation notifications.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class NotificationsConsumerServiceImpl implements NotificationsConsumerService {
 
-    private final NotificationRepository notificationRepository;
-    private final EmailService emailService;
+    private final NotificationRepository notificationRepository; // Repository for persisting notifications
+    private final EmailService emailService; // Service for sending email notifications
 
+    /**
+     * Consumes payment success notifications from the "payment-topic" Kafka topic.
+     * Saves the notification to the database and sends a payment success email.
+     *
+     * @param paymentConfirmationDTO The DTO containing payment confirmation details.
+     * @throws MessagingException If an error occurs while sending the email.
+     */
     @KafkaListener(topics = "payment-topic")
     @Override
     public void consumePaymentSuccessNotifications(
@@ -31,6 +42,7 @@ public class NotificationsConsumerServiceImpl implements NotificationsConsumerSe
 
         log.info("Consuming the message from payment-topic Topic :: {}", paymentConfirmationDTO);
 
+        // Save the notification to the database
         notificationRepository.save(
                 Notification.builder()
                         .notificationType(NotificationType.PAYMENT_CONFIRMATION)
@@ -39,8 +51,10 @@ public class NotificationsConsumerServiceImpl implements NotificationsConsumerSe
                         .build()
         );
 
+        // Extract customer name from the DTO
         var customerName = paymentConfirmationDTO.customerFirstName() + " " + paymentConfirmationDTO.customerLastName();
 
+        // Send payment success email
         emailService.sendPaymentSuccessEmail(
                 paymentConfirmationDTO.customerEmail(),
                 customerName,
@@ -50,6 +64,13 @@ public class NotificationsConsumerServiceImpl implements NotificationsConsumerSe
 
     }
 
+    /**
+     * Consumes order confirmation notifications from the "order-topic" Kafka topic.
+     * Saves the notification to the database and sends an order confirmation email.
+     *
+     * @param orderConfirmationDTO The DTO containing order confirmation details.
+     * @throws MessagingException If an error occurs while sending the email.
+     */
     @KafkaListener(topics = "order-topic")
     @Override
     public void consumeOrderConfirmationNotifications(
@@ -58,6 +79,7 @@ public class NotificationsConsumerServiceImpl implements NotificationsConsumerSe
 
         log.info("Consuming the message from order-topic Topic :: {}", orderConfirmationDTO);
 
+        // Save the notification to the database
         notificationRepository.save(
                 Notification.builder()
                         .notificationType(NotificationType.ORDER_CONFIRMATION)
@@ -66,8 +88,10 @@ public class NotificationsConsumerServiceImpl implements NotificationsConsumerSe
                         .build()
         );
 
+        // Extract customer name from the DTO
         var customerName = orderConfirmationDTO.customerDTO().firstName() + " " + orderConfirmationDTO.customerDTO().lastName();
 
+        // Send order confirmation email
         emailService.sendOrderConfirmationEmail(
                 orderConfirmationDTO.customerDTO().email(),
                 customerName,
