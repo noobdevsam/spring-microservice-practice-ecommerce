@@ -1,6 +1,8 @@
+# Configuration file for the Notification Service application.
+
 spring:
     application:
-        name: notification-service
+        name: notification-service # Specifies the name of the Spring Boot application.
     
     config:
-        import: optional:configserver:http://localhost:8086
+        import: optional:configserver:http://localhost:8086 # Imports configuration from the Config Server at the specified URL. The import is optional.
