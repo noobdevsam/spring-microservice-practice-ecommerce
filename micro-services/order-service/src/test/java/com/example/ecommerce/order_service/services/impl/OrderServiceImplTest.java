@@ -27,6 +27,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the OrderServiceImpl class.
+ * This class tests the functionality of creating and retrieving orders.
+ */
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
 
@@ -59,6 +63,10 @@ class OrderServiceImplTest {
     private CustomerOrder order;
     private List<ProductPurchaseResponseDTO> purchasedProducts;
 
+    /**
+     * Sets up the test environment before each test.
+     * Initialize mocks and test data.
+     */
     @BeforeEach
     void setUp() {
         orderRequestDTO = mock(OrderRequestDTO.class);
@@ -67,6 +75,10 @@ class OrderServiceImplTest {
         purchasedProducts = List.of(mock(ProductPurchaseResponseDTO.class));
     }
 
+    /**
+     * Tests the successful creation of an order.
+     * Verifies that the order is saved and the correct ID is returned.
+     */
     @Test
     void createOrder_success() {
         when(orderRequestDTO.customerId()).thenReturn(String.valueOf(1));
@@ -89,6 +101,10 @@ class OrderServiceImplTest {
         verify(orderProducerService).sendOrderConfirmation(any(OrderConfirmationDTO.class));
     }
 
+    /**
+     * Tests the creation of an order when the customer is not found.
+     * Verifies that a BusinessException is thrown.
+     */
     @Test
     void createOrder_customerNotFound_throwsBusinessException() {
         when(orderRequestDTO.customerId()).thenReturn(String.valueOf(2));
@@ -99,6 +115,10 @@ class OrderServiceImplTest {
         assertTrue(ex.getMessage().contains("Customer not found"));
     }
 
+    /**
+     * Tests retrieving all orders.
+     * Verifies that the returned list is correctly mapped.
+     */
     @Test
     void findAllOrders_returnsMappedList() {
         var order1 = mock(CustomerOrder.class);
@@ -117,6 +137,10 @@ class OrderServiceImplTest {
         assertTrue(result.contains(dto2));
     }
 
+    /**
+     * Tests retrieving an order by its ID when the order is found.
+     * Verifies that the correct DTO is returned.
+     */
     @Test
     void findOrderById_found() {
         var dto = mock(OrderResponseDTO.class);
@@ -129,6 +153,10 @@ class OrderServiceImplTest {
         assertEquals(dto, result);
     }
 
+    /**
+     * Tests retrieving an order by its ID when the order is not found.
+     * Verifies that an EntityNotFoundException is thrown.
+     */
     @Test
     void findOrderById_notFound_throwsEntityNotFoundException() {
         when(orderRepository.findById(99)).thenReturn(Optional.empty());
@@ -136,6 +164,10 @@ class OrderServiceImplTest {
         assertThrows(EntityNotFoundException.class, () -> orderService.findOrderById(99));
     }
 
+    /**
+     * Tests the creation of an order with empty purchases.
+     * Verifies that the order is saved and no order lines are created.
+     */
     @Test
     void createOrder_handlesEmptyPurchases() {
         when(orderRequestDTO.customerId()).thenReturn(String.valueOf(1));
@@ -157,6 +189,10 @@ class OrderServiceImplTest {
         verify(orderLineService, never()).saveOrderLine(any());
     }
 
+    /**
+     * Tests the creation of an order when the PaymentFeignClient throws an exception.
+     * Verifies that the exception is propagated correctly.
+     */
     @Test
     void createOrder_paymentFeignThrowsException_propagates() {
         when(orderRequestDTO.customerId()).thenReturn(String.valueOf(1));
