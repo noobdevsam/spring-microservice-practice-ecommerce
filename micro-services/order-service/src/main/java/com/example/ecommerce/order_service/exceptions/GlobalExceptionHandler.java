@@ -11,9 +11,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 
+/**
+ * Global exception handler for the order service.
+ * Provides centralized handling of exceptions across the application.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Handles exceptions of type EntityNotFoundException.
+     * Returns a 404 Not Found response with the exception message.
+     *
+     * @param ex The EntityNotFoundException instance.
+     * @return A ResponseEntity containing the exception message.
+     */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity
@@ -21,6 +32,13 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    /**
+     * Handles exceptions of type MethodArgumentNotValidException.
+     * Extracts validation errors and returns a 400 Bad Request response with the error details.
+     *
+     * @param ex The MethodArgumentNotValidException instance.
+     * @return A ResponseEntity containing an ErrorResponseDTO with validation error details.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         var errors = new HashMap<String, String>();
@@ -39,6 +57,13 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponseDTO(errors));
     }
 
+    /**
+     * Handles exceptions of type BusinessException.
+     * Returns a 400 Bad Request response with the exception message.
+     *
+     * @param ex The BusinessException instance.
+     * @return A ResponseEntity containing the exception message.
+     */
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<String> handleBusinessException(BusinessException ex) {
         return ResponseEntity
