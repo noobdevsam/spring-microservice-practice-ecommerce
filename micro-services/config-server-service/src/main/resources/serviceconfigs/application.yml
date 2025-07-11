@@ -16,7 +16,7 @@ spring:
 eureka:
     instance:
         # The hostname of the Eureka instance.
-        hostname: localhost
+        hostname: ${EUREKA_SERVER_HOSTNAME:localhost}
     client:
         service-url:
             # The default Eureka server URL for service registration and discovery.

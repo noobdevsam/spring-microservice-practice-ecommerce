@@ -36,10 +36,3 @@ spring:
 server:
     # The port on which the application will run.
     port: 8084
-
-#application:
-#    config:
-#        # URI for other service, used for inter-service communication.
-#        # Note: These URI are placeholders and should be replaced with actual service URLs in a production environment.
-#        # Port is set to match the default port of the respective service but later can be changed as needed toward gateway-service.
-#        product-url: http://localhost:8082/api/v1/products

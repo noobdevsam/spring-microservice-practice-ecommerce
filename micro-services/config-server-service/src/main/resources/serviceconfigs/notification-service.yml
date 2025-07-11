@@ -15,7 +15,7 @@ spring:
     kafka:
         consumer:
             # The Kafka bootstrap servers for connecting to the Kafka cluster.
-            bootstrap-servers: localhost:9092
+            bootstrap-servers: ${NS_KAFKA_HOST:localhost}:9092
             # The group IDs for the Kafka consumer.
             group-id: paymentGroup, orderGroup
             # Specifies the offset reset policy for the consumer.
@@ -32,9 +32,9 @@ spring:
     
     mail:
         # The host address of the mail server.
-        host: localhost
+        host: ${NS_MAIL_HOST:localhost}
         # The port on which the mail server is running.
-        port: 2025
+        port: ${NS_MAIL_PORT:2025}
         properties:
             mail:
                 smtp:
