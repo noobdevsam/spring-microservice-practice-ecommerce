@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the ProductService interface.
+ * Provides business logic for managing products and handling product purchases.
+ */
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -26,6 +30,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
+    /**
+     * Retrieves a product by its ID.
+     *
+     * @param id The ID of the product to retrieve.
+     * @return ProductResponseDTO containing the product details.
+     * @throws EntityNotFoundException If the product with the given ID is not found.
+     */
     @Override
     public ProductResponseDTO getProductById(Integer id) {
         return productRepository
@@ -38,6 +49,11 @@ public class ProductServiceImpl implements ProductService {
                 );
     }
 
+    /**
+     * Retrieves all products.
+     *
+     * @return A list of ProductResponseDTO objects containing details of all products.
+     */
     @Override
     public List<ProductResponseDTO> getAllProducts() {
         return productRepository
@@ -47,6 +63,12 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Creates a new product.
+     *
+     * @param productRequestDTO The ProductRequestDTO containing the details of the product to create.
+     * @return The ID of the newly created product.
+     */
     @Override
     public Integer createProduct(ProductRequestDTO productRequestDTO) {
         return productRepository
@@ -118,29 +140,5 @@ public class ProductServiceImpl implements ProductService {
                     return productMapper.productToProductPurchaseResponseDTO(product, quantity);
                 })
                 .collect(Collectors.toList());
-
-        /*
-        The updated `performPurchaseProducts` method is more efficient and maintainable due to these reasons:
-
-        - Map for Fast Lookup: It uses a `Map` to associate product IDs with their purchase requests, allowing O(1) access
-            when matching products to requests.
-        - Batch Database Operations: It fetches all products in a single query and saves all updates in one batch,
-            reducing database round-trips.
-        - No Sorting Needed: By using a map, it avoids sorting lists, which saves processing time.
-        - Streamlined Logic: The code is more concise and easier to read, making maintenance simpler.
-
-        Procedure Explanation:
-        ----------------------
-        1. Map Requests: Converts the list of purchase requests into a `Map` keyed by product ID for quick access.
-        2. Fetch Products: Retrieves all products matching the requested IDs in a single database call.
-        3. Validation: Checks if all requested products exist. If not, throws an exception.
-        4. Stock Check & Update: Iterates through each product, checks if enough stock is available, and updates the
-            quantity. If stock is insufficient, throws an exception.
-        5. Batch Save: Saves all updated products back to the database in one operation.
-        6. Prepare Response: Maps each updated product to a response DTO, including the purchased quantity,
-            and returns the list.
-
-        This approach minimizes database interactions and improves performance, especially when handling multiple products in a single purchase.
-        * */
     }
 }
