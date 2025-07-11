@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
     ms-db-mysql-product:
         container_name: ms-db-mysql-product
@@ -63,7 +65,7 @@ services:
         image: maildev/maildev:latest
         ports:
             - "2080:1080"
-            - "2025:1025"
+            - "3025:1025"
         volumes:
             - maildev-data:/data
         networks:
@@ -119,6 +121,114 @@ services:
             - microservices-net
         command:
             - "start-dev"
+
+# Uncomment the following services if you have the respective images built
+# with command : mvn clean package -DskipTests spring-boot:build-image
+
+#    ms-config-server:
+#        image: config-server-service:0.0.1-SNAPSHOT
+#        container_name: ms-config-server
+#        networks:
+#            - microservices-net
+#        restart: unless-stopped
+#
+#    ms-config-discovery:
+#        image: config-discovery-service:0.0.1-SNAPSHOT
+#        container_name: ms-config-discovery
+#        ports:
+#            - "8761:8761"
+#        networks:
+#            - microservices-net
+#        depends_on:
+#            - ms-config-server
+#        restart: unless-stopped
+#
+#    ms-customer-service:
+#        image: customer-service:0.0.1-SNAPSHOT
+#        container_name: ms-customer-service
+#        environment:
+#            - MONGODB_HOST_ADDRESS=ms-db-mongodb
+#        networks:
+#            - microservices-net
+#        depends_on:
+#            - ms-db-mongodb
+#            - ms-config-server
+#            - ms-config-discovery
+#        restart: unless-stopped
+#
+#    ms-product-service:
+#        image: product-service:0.0.1-SNAPSHOT
+#        container_name: ms-product-service
+#        environment:
+#            PS_HOST_ADDRESS: ms-db-mysql-product
+#        networks:
+#            - microservices-net
+#        depends_on:
+#            - ms-config-server
+#            - ms-config-discovery
+#        restart: unless-stopped
+#
+#    ms-order-service:
+#        image: order-service:0.0.1-SNAPSHOT
+#        container_name: ms-order-service
+#        environment:
+#            - OS_HOST_ADDRESS=ms-db-mysql-order
+#            - OS_KAFKA_HOST=ms-kafka
+#            - GS_HOST=ms-gateway-service
+#        networks:
+#            - microservices-net
+#        depends_on:
+#            - ms-config-server
+#            - ms-config-discovery
+#        restart: unless-stopped
+#
+#    ms-payment-service:
+#        image: payment-service:0.0.1-SNAPSHOT
+#        container_name: ms-payment-service
+#        environment:
+#            PMS_KAFKA_HOST: ms-kafka
+#            PMS_HOST_ADDRESS: ms-db-mysql-payment
+#        networks:
+#            - microservices-net
+#        depends_on:
+#            - ms-config-server
+#            - ms-config-discovery
+#        restart: unless-stopped
+#
+#    ms-notification-service:
+#        image: notification-service:0.0.1-SNAPSHOT
+#        container_name: ms-notification-service
+#        environment:
+#            - MONGODB_HOST_ADDRESS=ms-db-mongodb
+#            - NS_KAFKA_HOST=ms-kafka
+#            - MAIL_HOST=mail-dev
+#            - MAIL_PORT=3025
+#        networks:
+#            - microservices-net
+#        depends_on:
+#            - ms-db-mongodb
+#            - mail-dev
+#            - ms-kafka
+#            - ms-config-server
+#            - ms-config-discovery
+#        restart: unless-stopped
+#
+#    ms-gateway-service:
+#        image: gateway-service:0.0.1-SNAPSHOT
+#        container_name: ms-gateway-service
+#        ports:
+#            - "8080:8080"
+#        networks:
+#            - microservices-net
+#        depends_on:
+#            - ms-config-server
+#            - ms-config-discovery
+#            - ms-customer-service
+#            - ms-product-service
+#            - ms-order-service
+#            - ms-payment-service
+#            - ms-notification-service
+#        restart: unless-stopped
 
 networks:
     microservices-net:
