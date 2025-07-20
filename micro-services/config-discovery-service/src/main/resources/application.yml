@@ -10,4 +10,4 @@ spring:
         # Specifies the configuration server to import properties from.
         # The `optional` prefix indicates that the application will not fail to start
         # if the configuration server is unavailable.
-        import: optional:configserver:http://localhost:8086
+        import: optional:configserver:http://${CONFIG_SERVER_HOST:localhost}:${CONFIG_SERVER_PORT:8086}
