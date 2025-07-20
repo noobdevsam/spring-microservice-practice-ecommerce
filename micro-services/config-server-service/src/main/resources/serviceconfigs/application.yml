@@ -21,7 +21,7 @@ eureka:
     client:
         service-url:
             # The default Eureka server URL for service registration and discovery.
-            defaultZone: http://${eureka.instance.hostname}:8761/eureka
+            defaultZone: http://${EUREKA_SERVER_HOST:eureka.instance.hostname}:8761/eureka
 
 # Configuration for distributed tracing.
 management:
