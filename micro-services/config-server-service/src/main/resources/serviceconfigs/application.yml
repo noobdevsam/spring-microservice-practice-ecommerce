@@ -16,11 +16,11 @@ spring:
 eureka:
     instance:
         # The hostname of the Eureka instance.
-        hostname: localhost
+        hostname: ${EUREKA_SERVER_HOST:localhost}
     client:
         service-url:
             # The default Eureka server URL for service registration and discovery.
-            defaultZone: http://${eureka.instance.hostname}:8761/eureka
+            defaultZone: http://${eureka.instance.hostname}:{EUREKA_SERVER_PORT:8761}/eureka
 
 # Configuration for distributed tracing.
 management:
