@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
     ms-db-mysql-product:
         container_name: ms-db-mysql-product
@@ -121,27 +119,32 @@ services:
             - microservices-net
         command:
             - "start-dev"
-
-# Uncomment the following services if you have the respective images built
-# with command : mvn clean package -DskipTests spring-boot:build-image
-
-#    ms-config-server:
-#        image: config-server-service:0.0.1-SNAPSHOT
-#        container_name: ms-config-server
-#        networks:
-#            - microservices-net
-#        restart: unless-stopped
-#
-#    ms-config-discovery:
-#        image: config-discovery-service:0.0.1-SNAPSHOT
-#        container_name: ms-config-discovery
-#        ports:
-#            - "8761:8761"
-#        networks:
-#            - microservices-net
-#        depends_on:
-#            - ms-config-server
-#        restart: unless-stopped
+    
+    # Uncomment the following services if you have the respective images built
+    # with command : mvn clean package -DskipTests spring-boot:build-image
+    
+    ms-config-server:
+        image: config-server-service:0.0.1-SNAPSHOT
+        container_name: ms-config-server
+        networks:
+            - microservices-net
+        restart: unless-stopped
+    
+    ms-config-discovery:
+        image: config-discovery-service:0.0.1-SNAPSHOT
+        container_name: ms-config-discovery
+        ports:
+            - "7000:8761"
+        environment:
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - EUREKA_SERVER_PORT=8761
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-config-server
+        restart: unless-stopped
 #
 #    ms-customer-service:
 #        image: customer-service:0.0.1-SNAPSHOT
