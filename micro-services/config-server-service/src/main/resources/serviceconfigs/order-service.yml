@@ -42,8 +42,8 @@ application:
         # Note: These URIs are placeholders and should be replaced with actual service URLs in a production environment.
         
         # The URL for the `customer-service` through the gateway service.
-        customer-url: http://${GS_HOST:localhost}:8080/api/v1/customers
+        customer-url: http://${GS_HOST:localhost}:8008/api/v1/customers
         # The URL for the `product-service` through the gateway service.
-        product-url: http://${GS_HOST:localhost}:8080/api/v1/products
+        product-url: http://${GS_HOST:localhost}:8008/api/v1/products
         # The URL for the `payment-service` through the gateway service.
-        payment-url: http://${GS_HOST:localhost}:8080/api/v1/payments
+        payment-url: http://${GS_HOST:localhost}:8008/api/v1/payments

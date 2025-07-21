@@ -54,4 +54,4 @@ spring:
 
 server:
     # The port on which the API gateway application will run.
-    port: 8080
+    port: 8008
