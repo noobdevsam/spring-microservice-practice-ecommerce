@@ -12,17 +12,6 @@ spring:
         config:
             # Determines whether system properties should override configuration properties.
             override-system-properties: false
-    
-    zipkin:
-        # The base URL for the Zipkin server.
-        base-url: http://${ZIPKIN_BASE_URL:http://localhost:9411}
-    sleuth:
-        zipkin:
-            # The base URL for the Zipkin server.
-            base-url: http://${ZIPKIN_BASE_URL:http://localhost:9411}
-        sampler:
-            # The sampling probability for tracing. A value of 1.0 means 100% of requests are traced.
-            probability: 1.0
 
 # Configuration for the Eureka client.
 eureka:
@@ -44,4 +33,4 @@ management:
         tracing:
             endpoint:
                 # The endpoint for the Zipkin server.
-                base-url: http://${ZIPKIN_BASE_URL:http://localhost:9411}
+                base-url: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans
