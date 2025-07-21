@@ -15,7 +15,7 @@ spring:
     kafka:
         consumer:
             # The Kafka bootstrap servers for connecting to the Kafka cluster.
-            bootstrap-servers: ${NS_KAFKA_HOST:localhost}:9092
+            bootstrap-servers: ${NS_KAFKA_HOST:localhost}:${NS_KAFKA_PORT:9092}
             # The group IDs for the Kafka consumer.
             group-id: paymentGroup, orderGroup
             # Specifies the offset reset policy for the consumer.
