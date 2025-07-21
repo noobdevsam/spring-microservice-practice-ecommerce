@@ -230,24 +230,30 @@ services:
             - ms-config-server
             - ms-config-discovery
         restart: unless-stopped
-#
-#    ms-notification-service:
-#        image: notification-service:0.0.1-SNAPSHOT
-#        container_name: ms-notification-service
-#        environment:
-#            - MONGODB_HOST_ADDRESS=ms-db-mongodb
-#            - NS_KAFKA_HOST=ms-kafka
-#            - MAIL_HOST=mail-dev
-#            - MAIL_PORT=3025
-#        networks:
-#            - microservices-net
-#        depends_on:
-#            - ms-db-mongodb
-#            - mail-dev
-#            - ms-kafka
-#            - ms-config-server
-#            - ms-config-discovery
-#        restart: unless-stopped
+    
+    ms-notification-service:
+        image: notification-service:0.0.1-SNAPSHOT
+        container_name: ms-notification-service
+        environment:
+            - MONGODB_HOST_ADDRESS=ms-db-mongodb
+            - NS_KAFKA_HOST=ms-kafka
+            - NS_KAFKA_PORT=9094
+            - MAIL_HOST=mail-dev
+            - MAIL_PORT=1025
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mongodb
+            - mail-dev
+            - ms-kafka
+            - ms-zipkin-server
+            - ms-config-server
+            - ms-config-discovery
+        restart: unless-stopped
 #
 #    ms-gateway-service:
 #        image: gateway-service:0.0.1-SNAPSHOT
