@@ -5,4 +5,4 @@ spring:
         name: notification-service # Specifies the name of the Spring Boot application.
     
     config:
-        import: optional:configserver:http://localhost:8086 # Imports configuration from the Config Server at the specified URL. The import is optional.
+        import: optional:configserver:http://${CONFIG_SERVER_HOST:localhost}:${CONFIG_SERVER_PORT:8086} # Imports configuration from the Config Server at the specified URL. The import is optional.
