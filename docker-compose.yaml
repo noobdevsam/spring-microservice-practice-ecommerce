@@ -209,19 +209,27 @@ services:
             - ms-config-server
             - ms-config-discovery
         restart: unless-stopped
-#
-#    ms-payment-service:
-#        image: payment-service:0.0.1-SNAPSHOT
-#        container_name: ms-payment-service
-#        environment:
-#            PMS_KAFKA_HOST: ms-kafka
-#            PMS_HOST_ADDRESS: ms-db-mysql-payment
-#        networks:
-#            - microservices-net
-#        depends_on:
-#            - ms-config-server
-#            - ms-config-discovery
-#        restart: unless-stopped
+    
+    ms-payment-service:
+        image: payment-service:0.0.1-SNAPSHOT
+        container_name: ms-payment-service
+        environment:
+            PMS_KAFKA_HOST: ms-kafka
+            PMS_KAFKA_PORT: 9094
+            PMS_HOST_ADDRESS: ms-db-mysql-payment
+            CONFIG_SERVER_HOST: ms-config-server
+            CONFIG_SERVER_PORT: 8086
+            EUREKA_SERVER_HOST: ms-config-discovery
+            ZIPKIN_HOST: ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mysql-payment
+            - ms-kafka
+            - ms-zipkin-server
+            - ms-config-server
+            - ms-config-discovery
+        restart: unless-stopped
 #
 #    ms-notification-service:
 #        image: notification-service:0.0.1-SNAPSHOT
