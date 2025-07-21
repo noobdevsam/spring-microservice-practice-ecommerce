@@ -254,23 +254,26 @@ services:
             - ms-config-server
             - ms-config-discovery
         restart: unless-stopped
-#
-#    ms-gateway-service:
-#        image: gateway-service:0.0.1-SNAPSHOT
-#        container_name: ms-gateway-service
-#        ports:
-#            - "8080:8080"
-#        networks:
-#            - microservices-net
-#        depends_on:
-#            - ms-config-server
-#            - ms-config-discovery
-#            - ms-customer-service
-#            - ms-product-service
-#            - ms-order-service
-#            - ms-payment-service
-#            - ms-notification-service
-#        restart: unless-stopped
+    
+    ms-gateway-service:
+        image: gateway-service:0.0.1-SNAPSHOT
+        container_name: ms-gateway-service
+        environment:
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+            - KEYCLOAK_HOST=ms-keycloak
+            - KEYCLOAK_PORT=8080
+        ports:
+            - "8008:8008"
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-config-server
+            - ms-config-discovery
+            - ms-keycloak
+        restart: unless-stopped
 
 networks:
     microservices-net:
