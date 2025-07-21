@@ -23,7 +23,7 @@ spring:
     kafka:
         producer:
             # The Kafka bootstrap servers for connecting to the Kafka cluster.
-            bootstrap-servers: ${OS_KAFKA_HOST:localhost}:9092
+            bootstrap-servers: ${OS_KAFKA_HOST:localhost}:${OS_KAFKA_PORT:9092}
             # The class used to serialize the key of Kafka messages.
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             # The class used to serialize the value of Kafka messages.
