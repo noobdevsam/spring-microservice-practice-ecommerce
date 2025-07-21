@@ -115,8 +115,11 @@ services:
         ports:
             - "8088:8080"
         environment:
-            KEYCLOAK_ADMIN: admin
-            KEYCLOAK_ADMIN_PASSWORD: admin
+            KC_BOOTSTRAP_ADMIN_USERNAME: admin
+            KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+            KC_HOSTNAME: ms-keycloak
+            KC_HOSTNAME_STRICT: false
+            KC_HOSTNAME_STRICT_HTTPS: false
         volumes:
             - keycloak-data:/opt/keycloak/data
         networks:
@@ -263,8 +266,8 @@ services:
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
             - ZIPKIN_HOST=ms-zipkin-server
-            - KEYCLOAK_HOST=localhost
-            - KEYCLOAK_PORT=8088
+            - KEYCLOAK_HOST=ms-keycloak
+            - KEYCLOAK_PORT=8080
         ports:
             - "8008:8008"
         networks:
