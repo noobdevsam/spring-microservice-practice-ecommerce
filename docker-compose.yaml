@@ -165,18 +165,24 @@ services:
             - ms-config-discovery
             - ms-zipkin-server
         restart: unless-stopped
-#
-#    ms-product-service:
-#        image: product-service:0.0.1-SNAPSHOT
-#        container_name: ms-product-service
-#        environment:
-#            PS_HOST_ADDRESS: ms-db-mysql-product
-#        networks:
-#            - microservices-net
-#        depends_on:
-#            - ms-config-server
-#            - ms-config-discovery
-#        restart: unless-stopped
+    
+    ms-product-service:
+        image: product-service:0.0.1-SNAPSHOT
+        container_name: ms-product-service
+        environment:
+            - PS_HOST_ADDRESS=ms-db-mysql-product
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mysql-product
+            - ms-config-server
+            - ms-config-discovery
+            - ms-zipkin-server
+        restart: unless-stopped
 #
 #    ms-order-service:
 #        image: order-service:0.0.1-SNAPSHOT
