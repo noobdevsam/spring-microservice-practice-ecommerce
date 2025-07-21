@@ -7,6 +7,7 @@ services:
             MYSQL_DATABASE: productdb
             MYSQL_USER: productadmin
             MYSQL_PASSWORD: password
+            MYSQL_TCP_PORT: 3306
         volumes:
             - mysql-data-product:/var/lib/mysql
         ports:
@@ -23,10 +24,11 @@ services:
             MYSQL_DATABASE: orderdb
             MYSQL_USER: orderadmin
             MYSQL_PASSWORD: password
+            MYSQL_TCP_PORT: 3307
         volumes:
             - mysql-data-order:/var/lib/mysql
         ports:
-            - "3307:3306"
+            - "3307:3307"
         networks:
             - microservices-net
         restart: unless-stopped
@@ -39,10 +41,11 @@ services:
             MYSQL_DATABASE: paymentdb
             MYSQL_USER: paymentadmin
             MYSQL_PASSWORD: password
+            MYSQL_TCP_PORT: 3308
         volumes:
             - mysql-data-payment:/var/lib/mysql
         ports:
-            - "3308:3306"
+            - "3308:3308"
         networks:
             - microservices-net
         restart: unless-stopped
