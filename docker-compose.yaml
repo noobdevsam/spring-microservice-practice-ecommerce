@@ -87,9 +87,10 @@ services:
             KAFKA_CFG_NODE_ID: 1
             KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@ms-kafka:9093
             KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-            KAFKA_CFG_LISTENERS: PLAINTEXT://ms-kafka:9092,CONTROLLER://ms-kafka:9093
-            KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 # Use the advertised listener for your apps to connect
-            KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+            KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://ms-kafka:9093,INTERNAL://0.0.0.0:9094
+            KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,INTERNAL://ms-kafka:9094 # Use the advertised listener for your apps to connect
+            KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+            KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
             KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
             KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
             KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR: 1
@@ -186,20 +187,28 @@ services:
             - ms-config-discovery
             - ms-zipkin-server
         restart: unless-stopped
-#
-#    ms-order-service:
-#        image: order-service:0.0.1-SNAPSHOT
-#        container_name: ms-order-service
-#        environment:
-#            - OS_HOST_ADDRESS=ms-db-mysql-order
-#            - OS_KAFKA_HOST=ms-kafka
-#            - GS_HOST=ms-gateway-service
-#        networks:
-#            - microservices-net
-#        depends_on:
-#            - ms-config-server
-#            - ms-config-discovery
-#        restart: unless-stopped
+    
+    ms-order-service:
+        image: order-service:0.0.1-SNAPSHOT
+        container_name: ms-order-service
+        environment:
+            - OS_HOST_ADDRESS=ms-db-mysql-order
+            - OS_KAFKA_HOST=ms-kafka
+            - OS_KAFKA_PORT=9094
+            - GS_HOST=ms-gateway-service
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mysql-order
+            - ms-kafka
+            - ms-zipkin-server
+            - ms-config-server
+            - ms-config-discovery
+        restart: unless-stopped
 #
 #    ms-payment-service:
 #        image: payment-service:0.0.1-SNAPSHOT
