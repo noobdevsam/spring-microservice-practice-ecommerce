@@ -14,7 +14,7 @@ eureka:
         fetch-registry: false
         service-url:
             # The default Eureka server URL for service registration and discovery.
-            defaultZone: http://${EUREKA_SERVER_HOST:eureka.instance.hostname}:${server.port}/eureka/
+            defaultZone: http://${eureka.instance.hostname:localhost}:${server.port}/eureka/
 
 server:
     # The port on which the Eureka server will run.
