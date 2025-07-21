@@ -126,6 +126,9 @@ services:
     ms-config-server:
         image: config-server-service:0.0.1-SNAPSHOT
         container_name: ms-config-server
+        environment:
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
         networks:
             - microservices-net
         restart: unless-stopped
@@ -139,25 +142,29 @@ services:
             - CONFIG_SERVER_HOST=ms-config-server
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - EUREKA_SERVER_PORT=8761
         networks:
             - microservices-net
         depends_on:
             - ms-config-server
         restart: unless-stopped
-#
-#    ms-customer-service:
-#        image: customer-service:0.0.1-SNAPSHOT
-#        container_name: ms-customer-service
-#        environment:
-#            - MONGODB_HOST_ADDRESS=ms-db-mongodb
-#        networks:
-#            - microservices-net
-#        depends_on:
-#            - ms-db-mongodb
-#            - ms-config-server
-#            - ms-config-discovery
-#        restart: unless-stopped
+    
+    ms-customer-service:
+        image: customer-service:0.0.1-SNAPSHOT
+        container_name: ms-customer-service
+        environment:
+            - MONGODB_HOST_ADDRESS=ms-db-mongodb
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mongodb
+            - ms-config-server
+            - ms-config-discovery
+            - ms-zipkin-server
+        restart: unless-stopped
 #
 #    ms-product-service:
 #        image: product-service:0.0.1-SNAPSHOT
