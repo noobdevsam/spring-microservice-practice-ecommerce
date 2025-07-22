@@ -11,7 +11,7 @@ spring:
     datasource:
         # The JDBC URL for connecting to the MySQL database.
         # Defaults to `localhost` on port `3306` with the database name `productdb` if environment variables are not set.
-        url: jdbc:mysql://${PS_HOST_ADDRESS:localhost}:${PS_HOST_PORT:3306}/${PS_DB:productdb}
+        url: jdbc:mysql://${PS_HOST_ADDRESS}:${PS_HOST_PORT:3306}/${PS_DB:productdb}
         # The username for the MySQL database connection.
         username: ${PS_DB_USER:productadmin}
         # The password for the MySQL database connection.

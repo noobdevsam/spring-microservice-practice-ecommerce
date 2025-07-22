@@ -6,7 +6,7 @@ spring:
         mongodb:
             # The URI for connecting to the MongoDB database.
             # Defaults to `localhost` on port `27017` if `MONGODB_HOST_ADDRESS` is not set.
-            uri: mongodb://${MONGODB_HOST_ADDRESS:localhost}:27017
+            uri: mongodb://${MONGODB_HOST_ADDRESS}:27017
             # The name of the MongoDB database to use.
             # Defaults to `customer-service` if `MONGODB_CS_DATABASE` is not set.
             database: ${MONGODB_CS_DATABASE:customer-service}
