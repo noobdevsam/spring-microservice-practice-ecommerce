@@ -37,4 +37,4 @@ management:
         tracing:
             endpoint:
                 # The endpoint for the Zipkin server.
-                base-url: http://${ZIPKIN_HOST}:9411/api/v2/spans
+                base-url: http://${ZIPKIN_HOST:ms-zipkin-server}:9411/api/v2/spans
