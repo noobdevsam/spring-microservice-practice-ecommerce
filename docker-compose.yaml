@@ -100,7 +100,7 @@ services:
     
     ms-zipkin-server:
         container_name: ms-zipkin-server
-        image: openzipkin/zipkin:latest
+        image: bitnami/zipkin:latest
         ports:
             - "9412:9411"
         volumes:
@@ -135,7 +135,6 @@ services:
         container_name: ms-config-server
         environment:
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - ZIPKIN_HOST=ms-zipkin-server
         networks:
             - microservices-net
         restart: unless-stopped
@@ -163,7 +162,7 @@ services:
             - CONFIG_SERVER_HOST=ms-config-server
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - ZIPKIN_HOST=ms-zipkin-server
+            - ZIPKIN_HOST=http://ms-zipkin-server:9411/api/v2/spans
         networks:
             - microservices-net
         depends_on:
@@ -181,7 +180,7 @@ services:
             - CONFIG_SERVER_HOST=ms-config-server
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - ZIPKIN_HOST=ms-zipkin-server
+            - ZIPKIN_HOST=http://ms-zipkin-server:9411/api/v2/spans
         networks:
             - microservices-net
         depends_on:
@@ -202,7 +201,7 @@ services:
             - CONFIG_SERVER_HOST=ms-config-server
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - ZIPKIN_HOST=ms-zipkin-server
+            - ZIPKIN_HOST=http://ms-zipkin-server:9411/api/v2/spans
         networks:
             - microservices-net
         depends_on:
@@ -223,7 +222,7 @@ services:
             - CONFIG_SERVER_HOST=ms-config-server
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - ZIPKIN_HOST=ms-zipkin-server
+            - ZIPKIN_HOST=http://ms-zipkin-server:9411/api/v2/spans
         networks:
             - microservices-net
         depends_on:
@@ -246,7 +245,7 @@ services:
             - CONFIG_SERVER_HOST=ms-config-server
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - ZIPKIN_HOST=ms-zipkin-server
+            - ZIPKIN_HOST=http://ms-zipkin-server:9411/api/v2/spans
         networks:
             - microservices-net
         depends_on:
@@ -265,7 +264,7 @@ services:
             - CONFIG_SERVER_HOST=ms-config-server
             - CONFIG_SERVER_PORT=8086
             - EUREKA_SERVER_HOST=ms-config-discovery
-            - ZIPKIN_HOST=ms-zipkin-server
+            - ZIPKIN_HOST=http://ms-zipkin-server:9411/api/v2/spans
             - KEYCLOAK_HOST=ms-keycloak
             - KEYCLOAK_PORT=8088
         ports:
