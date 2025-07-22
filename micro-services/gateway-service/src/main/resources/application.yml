@@ -9,7 +9,7 @@ spring:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://${KEYCLOAK_EXTERNAL_HOST:${KEYCLOAK_HOST}}:${KEYCLOAK_EXTERNAL_PORT:${KEYCLOAK_PORT}}/realms/ecommerce-microservices # Defines the issuer URI for JWT validation in the OAuth2 resource server.
+                    issuer-uri: http://${KEYCLOAK_HOST}:${KEYCLOAK_PORT}/realms/ecommerce-microservices # Defines the issuer URI for JWT validation in the OAuth2 resource server.
                     
                     # Access token endpoint for testing in Postman.
                     # Uncomment the following line if needed:
