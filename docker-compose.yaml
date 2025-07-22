@@ -102,7 +102,7 @@ services:
         container_name: ms-zipkin-server
         image: openzipkin/zipkin:latest
         ports:
-            - "9411:9411"
+            - "9412:9411"
         volumes:
             - zipkin-data:/data
         networks:
