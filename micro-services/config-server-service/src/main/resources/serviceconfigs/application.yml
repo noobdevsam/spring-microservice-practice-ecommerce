@@ -18,10 +18,13 @@ eureka:
     instance:
         # The hostname of the Eureka instance.
         hostname: ${EUREKA_SERVER_HOST:localhost}
+        prefer-ip-address: true
     client:
         service-url:
             # The default Eureka server URL for service registration and discovery.
             defaultZone: http://${eureka.instance.hostname}:8761/eureka
+        register-with-eureka: true
+        fetch-registry: true
 
 # Configuration for distributed tracing.
 management:
