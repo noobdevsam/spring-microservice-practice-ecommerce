@@ -18,7 +18,7 @@ eureka:
     instance:
         # The hostname of the Eureka instance.
         hostname: ${EUREKA_SERVER_HOST}
-    #        prefer-ip-address: true
+        prefer-ip-address: true
     client:
         service-url:
             # The default Eureka server URL for service registration and discovery.
