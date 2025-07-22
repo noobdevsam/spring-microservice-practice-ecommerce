@@ -13,7 +13,7 @@ spring:
     datasource:
         # The JDBC URL for connecting to the MySQL database.
         # Defaults to `localhost` on port `3307` with the database name `orderdb` if environment variables are not set.
-        url: jdbc:mysql://${OS_HOST_ADDRESS:localhost}:${OS_HOST_PORT:3307}/${OS_DB:orderdb}
+        url: jdbc:mysql://${OS_HOST_ADDRESS}:${OS_HOST_PORT:3307}/${OS_DB:orderdb}
         # The username for the MySQL database connection.
         username: ${OS_DB_USER:orderadmin}
         # The password for the MySQL database connection.
@@ -23,7 +23,7 @@ spring:
     kafka:
         producer:
             # The Kafka bootstrap servers for connecting to the Kafka cluster.
-            bootstrap-servers: ${OS_KAFKA_HOST:localhost}:${OS_KAFKA_PORT:9092}
+            bootstrap-servers: ${OS_KAFKA_HOST}:${OS_KAFKA_PORT}
             # The class used to serialize the key of Kafka messages.
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             # The class used to serialize the value of Kafka messages.
@@ -42,8 +42,21 @@ application:
         # Note: These URIs are placeholders and should be replaced with actual service URLs in a production environment.
         
         # The URL for the `customer-service` through the gateway service.
-        customer-url: http://${GS_HOST:localhost}:8008/api/v1/customers
+        customer-url: http://${GS_HOST}:8008/api/v1/customers
         # The URL for the `product-service` through the gateway service.
-        product-url: http://${GS_HOST:localhost}:8008/api/v1/products
+        product-url: http://${GS_HOST}:8008/api/v1/products
         # The URL for the `payment-service` through the gateway service.
-        payment-url: http://${GS_HOST:localhost}:8008/api/v1/payments
+        payment-url: http://${GS_HOST}:8008/api/v1/payments
+
+# Configuration for distributed tracing.
+management:
+    tracing:
+        sampling:
+            # Sets the probability for tracing sampling. A value of 1.0 means 100% of requests are traced.
+            probability: 1.0
+        enabled: true
+    zipkin:
+        tracing:
+            endpoint:
+                # The endpoint for the Zipkin server.
+                base-url: ${ZIPKIN_HOST}

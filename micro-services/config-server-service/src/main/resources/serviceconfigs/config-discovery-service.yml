@@ -6,7 +6,7 @@ eureka:
         # The hostname of the Eureka server instance.
         # EUREKA_SERVER_HOST should direct to the host (service name of the host)
         #   where the Eureka server is running.
-        hostname: ${EUREKA_SERVER_HOST:localhost}
+        hostname: ${EUREKA_SERVER_HOST}
     client:
         # Indicates whether this application should register itself with Eureka.
         register-with-eureka: false

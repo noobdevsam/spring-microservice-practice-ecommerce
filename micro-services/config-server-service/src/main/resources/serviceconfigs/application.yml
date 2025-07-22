@@ -17,7 +17,7 @@ spring:
 eureka:
     instance:
         # The hostname of the Eureka instance.
-        hostname: ${EUREKA_SERVER_HOST:localhost}
+        hostname: ${EUREKA_SERVER_HOST}
         prefer-ip-address: true
     client:
         service-url:
@@ -26,14 +26,3 @@ eureka:
         register-with-eureka: true
         fetch-registry: true
 
-# Configuration for distributed tracing.
-management:
-    tracing:
-        sampling:
-            # Sets the probability for tracing sampling. A value of 1.0 means 100% of requests are traced.
-            probability: 1.0
-    zipkin:
-        tracing:
-            endpoint:
-                # The endpoint for the Zipkin server.
-                base-url: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans

@@ -11,7 +11,7 @@ spring:
     datasource:
         # The JDBC URL for connecting to the MySQL database.
         # Defaults to `localhost` on port `3306` with the database name `productdb` if environment variables are not set.
-        url: jdbc:mysql://${PS_HOST_ADDRESS:localhost}:${PS_HOST_PORT:3306}/${PS_DB:productdb}
+        url: jdbc:mysql://${PS_HOST_ADDRESS}:${PS_HOST_PORT:3306}/${PS_DB:productdb}
         # The username for the MySQL database connection.
         username: ${PS_DB_USER:productadmin}
         # The password for the MySQL database connection.
@@ -35,3 +35,16 @@ spring:
 server:
     # The port on which the application will run.
     port: 8082
+
+# Configuration for distributed tracing.
+management:
+    tracing:
+        sampling:
+            # Sets the probability for tracing sampling. A value of 1.0 means 100% of requests are traced.
+            probability: 1.0
+        enabled: true
+    zipkin:
+        tracing:
+            endpoint:
+                # The endpoint for the Zipkin server.
+                base-url: ${ZIPKIN_HOST}
