@@ -3,8 +3,10 @@
 
 eureka:
     instance:
-        # The hostname of the Eureka instance.
-        hostname: localhost
+        # The hostname of the Eureka server instance.
+        # EUREKA_SERVER_HOST should direct to the host (service name of the host)
+        #   where the Eureka server is running.
+        hostname: ${EUREKA_SERVER_HOST:localhost}
     client:
         # Indicates whether this application should register itself with Eureka.
         register-with-eureka: false

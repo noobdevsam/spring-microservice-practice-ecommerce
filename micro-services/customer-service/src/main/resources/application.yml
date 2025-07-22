@@ -8,4 +8,4 @@ spring:
     config:
         # Imports additional configuration from a Config Server.
         # The `optional` keyword ensures the application can start even if the Config Server is unavailable.
-        import: optional:configserver:http://localhost:8086
+        import: optional:configserver:http://${CONFIG_SERVER_HOST:localhost}:${CONFIG_SERVER_PORT:8086}

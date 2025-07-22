@@ -7,6 +7,7 @@ services:
             MYSQL_DATABASE: productdb
             MYSQL_USER: productadmin
             MYSQL_PASSWORD: password
+            MYSQL_TCP_PORT: 3306
         volumes:
             - mysql-data-product:/var/lib/mysql
         ports:
@@ -23,10 +24,11 @@ services:
             MYSQL_DATABASE: orderdb
             MYSQL_USER: orderadmin
             MYSQL_PASSWORD: password
+            MYSQL_TCP_PORT: 3307
         volumes:
             - mysql-data-order:/var/lib/mysql
         ports:
-            - "3307:3306"
+            - "3307:3307"
         networks:
             - microservices-net
         restart: unless-stopped
@@ -39,10 +41,11 @@ services:
             MYSQL_DATABASE: paymentdb
             MYSQL_USER: paymentadmin
             MYSQL_PASSWORD: password
+            MYSQL_TCP_PORT: 3308
         volumes:
             - mysql-data-payment:/var/lib/mysql
         ports:
-            - "3308:3306"
+            - "3308:3308"
         networks:
             - microservices-net
         restart: unless-stopped
@@ -63,7 +66,7 @@ services:
         image: maildev/maildev:latest
         ports:
             - "2080:1080"
-            - "2025:1025"
+            - "3025:1025"
         volumes:
             - maildev-data:/data
         networks:
@@ -84,9 +87,10 @@ services:
             KAFKA_CFG_NODE_ID: 1
             KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@ms-kafka:9093
             KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-            KAFKA_CFG_LISTENERS: PLAINTEXT://ms-kafka:9092,CONTROLLER://ms-kafka:9093
-            KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 # Use the advertised listener for your apps to connect
-            KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+            KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://ms-kafka:9093,INTERNAL://0.0.0.0:9094
+            KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,INTERNAL://ms-kafka:9094 # Use the advertised listener for your apps to connect
+            KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+            KAFKA_CFG_INTER_BROKER_LISTENER_NAME: INTERNAL
             KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
             KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
             KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR: 1
@@ -109,16 +113,170 @@ services:
         container_name: ms-keycloak
         image: keycloak/keycloak:latest
         ports:
-            - "8088:8080"
+            - "8088:8088"
         environment:
-            KEYCLOAK_ADMIN: admin
-            KEYCLOAK_ADMIN_PASSWORD: admin
+            KC_BOOTSTRAP_ADMIN_USERNAME: admin
+            KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+            KC_HTTP_PORT: 8088
+            KC_HOSTNAME: ms-keycloak
+        #            KC_HOSTNAME_ADMIN_URL: http://localhost:8088
         volumes:
             - keycloak-data:/opt/keycloak/data
         networks:
             - microservices-net
         command:
             - "start-dev"
+    
+    # Uncomment the following services if you have the respective images built
+    # with command : mvn clean package -DskipTests spring-boot:build-image
+    
+    ms-config-server:
+        image: config-server-service:0.0.1-SNAPSHOT
+        container_name: ms-config-server
+        environment:
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        restart: unless-stopped
+    
+    ms-config-discovery:
+        image: config-discovery-service:0.0.1-SNAPSHOT
+        container_name: ms-config-discovery
+        ports:
+            - "7000:8761"
+        environment:
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-config-server
+        restart: unless-stopped
+    
+    ms-customer-service:
+        image: customer-service:0.0.1-SNAPSHOT
+        container_name: ms-customer-service
+        environment:
+            - MONGODB_HOST_ADDRESS=ms-db-mongodb
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mongodb
+            - ms-config-server
+            - ms-config-discovery
+            - ms-zipkin-server
+        restart: unless-stopped
+    
+    ms-product-service:
+        image: product-service:0.0.1-SNAPSHOT
+        container_name: ms-product-service
+        environment:
+            - PS_HOST_ADDRESS=ms-db-mysql-product
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mysql-product
+            - ms-config-server
+            - ms-config-discovery
+            - ms-zipkin-server
+        restart: unless-stopped
+    
+    ms-order-service:
+        image: order-service:0.0.1-SNAPSHOT
+        container_name: ms-order-service
+        environment:
+            - OS_HOST_ADDRESS=ms-db-mysql-order
+            - OS_KAFKA_HOST=ms-kafka
+            - OS_KAFKA_PORT=9094
+            - GS_HOST=ms-gateway-service
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mysql-order
+            - ms-kafka
+            - ms-zipkin-server
+            - ms-config-server
+            - ms-config-discovery
+        restart: unless-stopped
+    
+    ms-payment-service:
+        image: payment-service:0.0.1-SNAPSHOT
+        container_name: ms-payment-service
+        environment:
+            - PMS_KAFKA_HOST=ms-kafka
+            - PMS_KAFKA_PORT=9094
+            - PMS_HOST_ADDRESS=ms-db-mysql-payment
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mysql-payment
+            - ms-kafka
+            - ms-zipkin-server
+            - ms-config-server
+            - ms-config-discovery
+        restart: unless-stopped
+    
+    ms-notification-service:
+        image: notification-service:0.0.1-SNAPSHOT
+        container_name: ms-notification-service
+        environment:
+            - MONGODB_HOST_ADDRESS=ms-db-mongodb
+            - NS_KAFKA_HOST=ms-kafka
+            - NS_KAFKA_PORT=9094
+            - MAIL_HOST=mail-dev
+            - MAIL_PORT=1025
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-db-mongodb
+            - mail-dev
+            - ms-kafka
+            - ms-zipkin-server
+            - ms-config-server
+            - ms-config-discovery
+        restart: unless-stopped
+    
+    ms-gateway-service:
+        image: gateway-service:0.0.1-SNAPSHOT
+        container_name: ms-gateway-service
+        environment:
+            - CONFIG_SERVER_HOST=ms-config-server
+            - CONFIG_SERVER_PORT=8086
+            - EUREKA_SERVER_HOST=ms-config-discovery
+            - ZIPKIN_HOST=ms-zipkin-server
+            - KEYCLOAK_HOST=ms-keycloak
+            - KEYCLOAK_PORT=8088
+        ports:
+            - "8080:8008"
+        networks:
+            - microservices-net
+        depends_on:
+            - ms-config-server
+            - ms-config-discovery
+            - ms-keycloak
+        restart: unless-stopped
 
 networks:
     microservices-net:
