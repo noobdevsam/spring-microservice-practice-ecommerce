@@ -32,8 +32,9 @@ management:
         sampling:
             # Sets the probability for tracing sampling. A value of 1.0 means 100% of requests are traced.
             probability: 1.0
+        enabled: true
     zipkin:
         tracing:
             endpoint:
                 # The endpoint for the Zipkin server.
-                base-url: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans
+                base-url: http://${ZIPKIN_HOST}:9411/api/v2/spans
