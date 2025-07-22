@@ -34,7 +34,7 @@ spring:
         # The host address of the mail server.
         host: ${MAIL_HOST:localhost}
         # The port on which the mail server is running.
-        port: { MAIL_PORT:2025 }
+        port: ${MAIL_PORT:2025}
         properties:
             mail:
                 smtp:
