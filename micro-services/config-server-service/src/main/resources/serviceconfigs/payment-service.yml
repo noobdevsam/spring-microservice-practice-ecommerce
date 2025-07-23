@@ -36,16 +36,4 @@ spring:
 server:
     # The port on which the application will run.
     port: 8084
-#
-## Configuration for distributed tracing.
-#management:
-#    tracing:
-#        sampling:
-#            # Sets the probability for tracing sampling. A value of 1.0 means 100% of requests are traced.
-#            probability: 1.0
-#        enabled: true
-#    zipkin:
-#        tracing:
-#            endpoint:
-#                # The endpoint for the Zipkin server.
-#                base-url: ${ZIPKIN_HOST}
+
