@@ -98,16 +98,16 @@ services:
             - microservices-net
         restart: unless-stopped
     
-    #    ms-zipkin-server:
-    #        container_name: ms-zipkin-server
-    #        image: bitnami/zipkin:latest
-    #        ports:
-    #            - "9412:9411"
-    #        volumes:
-    #            - zipkin-data:/data
-    #        networks:
-    #            - microservices-net
-    #        restart: unless-stopped
+    ms-zipkin-server:
+        container_name: ms-zipkin-server
+        image: bitnami/zipkin:latest
+        ports:
+            - "9412:9411"
+        volumes:
+            - zipkin-data:/data
+        networks:
+            - microservices-net
+        restart: unless-stopped
     
     ms-keycloak:
         container_name: ms-keycloak
