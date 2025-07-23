@@ -12,6 +12,9 @@ spring:
         config:
             # Determines whether system properties should override configuration properties.
             override-system-properties: false
+    threads:
+        virtual:
+            enabled: true
 
 # Configuration for the Eureka client.
 eureka:
@@ -26,3 +29,10 @@ eureka:
         register-with-eureka: true
         fetch-registry: true
 
+# Configuration for distributed tracing.
+management:
+    tracing:
+        sampling:
+            # Sets the probability for tracing sampling. A value of 1.0 means 100% of requests are traced.
+            probability: 1.0
+        enabled: true
