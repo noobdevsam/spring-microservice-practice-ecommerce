@@ -46,6 +46,17 @@ kubectl create service clusterip ms-db-mysql-product --tcp=3306:3306 --dry-run=c
 kubectl apply -f mysql-product-service.yaml
 ```
 
+For mysql-order:
+
+```bash
+kubectl create deployment ms-db-mysql-order --image=mysql:latest --dry-run=client -o yaml > mysql-order-deployment.yaml
+# edit mysql-order-deployment.yaml to set the correct environment variables and other configurations
+kubectl apply -f mysql-order-deployment.yaml
+
+kubectl create service clusterip ms-db-mysql-order --tcp=3307:3307 --dry-run=client -o yaml > mysql-order-service.yaml
+kubectl apply -f mysql-order-service.yaml
+```
+
 For zipkin:
 
 ```bash
