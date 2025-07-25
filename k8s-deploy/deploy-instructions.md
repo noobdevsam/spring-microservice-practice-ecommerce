@@ -79,6 +79,17 @@ kubectl create service clusterip ms-keycloak --tcp=8088:8088 --dry-run=client -o
 kubectl apply -f keycloak-service.yaml
 ```
 
+For kafka:
+
+```bash
+kubectl create deployment ms-kafka --image=bitnami/kafka:latest --dry-run=client -o yaml > kafka-deployment.yaml
+# edit kafka-deployment.yaml to set the correct environment variables and other configurations
+kubectl apply -f kafka-deployment.yaml
+
+kubectl create service clusterip ms-kafka --tcp=9092:9092 --dry-run=client -o yaml > kafka-service.yaml
+kubectl apply -f kafka-service.yaml
+```
+
 For zipkin:
 
 ```bash
