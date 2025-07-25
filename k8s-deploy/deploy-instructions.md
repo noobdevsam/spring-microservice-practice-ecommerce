@@ -24,6 +24,17 @@ microservice :
 1. Ensure you have the required images available in your local Docker registry or a remote registry.
 2. Make sure you have a Kubernetes cluster running and `kubectl` configured to interact with it.
 
+For mongodb:
+
+```bash
+kubectl create deployment ms-db-mongo --image=mongo:latest --dry-run=client -o yaml > mongo-deployment.yaml
+# edit mongo-deployment.yaml to set the correct environment variables and other configurations
+kubectl apply -f mongo-deployment.yaml
+
+kubectl create service clusterip ms-db-mongo --tcp=27017:27017 --dry-run=client -o yaml > mongo-service.yaml
+kubectl apply -f mongo-service.yaml
+```
+
 For zipkin:
 
 ```bash
