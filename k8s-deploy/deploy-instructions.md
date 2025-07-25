@@ -57,6 +57,17 @@ kubectl create service clusterip ms-db-mysql-order --tcp=3307:3307 --dry-run=cli
 kubectl apply -f mysql-order-service.yaml
 ```
 
+For mysql-payment:
+
+```bash
+kubectl create deployment ms-db-mysql-payment --image=mysql:latest --dry-run=client -o yaml > mysql-payment-deployment.yaml
+# edit mysql-payment-deployment.yaml to set the correct environment variables and other configurations
+kubectl apply -f mysql-payment-deployment.yaml
+
+kubectl create service clusterip ms-db-mysql-payment --tcp=3308:3308 --dry-run=client -o yaml > mysql-payment-service.yaml
+kubectl apply -f mysql-payment-service.yaml
+```
+
 For keycloak:
 
 ```bash
