@@ -57,6 +57,17 @@ kubectl create service clusterip ms-db-mysql-order --tcp=3307:3307 --dry-run=cli
 kubectl apply -f mysql-order-service.yaml
 ```
 
+For keycloak:
+
+```bash
+kubectl create deployment ms-keycloak --image=keycloak/keycloak:latest --dry-run=client -o yaml > keycloak-deployment.yaml
+# edit keycloak-deployment.yaml to set the correct environment variables and other configurations
+kubectl apply -f keycloak-deployment.yaml
+
+kubectl create service clusterip ms-keycloak --tcp=8088:8088 --dry-run=client -o yaml > keycloak-service.yaml
+kubectl apply -f keycloak-service.yaml
+```
+
 For zipkin:
 
 ```bash
