@@ -35,6 +35,17 @@ kubectl create service clusterip ms-db-mongo --tcp=27017:27017 --dry-run=client 
 kubectl apply -f mongo-service.yaml
 ```
 
+For mysql-product:
+
+```bash
+kubectl create deployment ms-db-mysql-product --image=mysql:latest --dry-run=client -o yaml > mysql-product-deployment.yaml
+# edit mysql-product-deployment.yaml to set the correct environment variables and other configurations
+kubectl apply -f mysql-product-deployment.yaml
+
+kubectl create service clusterip ms-db-mysql-product --tcp=3306:3306 --dry-run=client -o yaml > mysql-product-service.yaml
+kubectl apply -f mysql-product-service.yaml
+```
+
 For zipkin:
 
 ```bash
