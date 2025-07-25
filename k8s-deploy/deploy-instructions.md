@@ -90,6 +90,17 @@ kubectl create service clusterip ms-kafka --tcp=9092:9092 --dry-run=client -o ya
 kubectl apply -f kafka-service.yaml
 ```
 
+For maildev:
+
+```bash
+kubectl create deployment ms-maildev --image=maildev/maildev:latest --dry-run=client -o yaml > maildev-deployment.yaml
+# edit maildev-deployment.yaml to set the correct environment variables and other configurations
+kubectl apply -f maildev-deployment.yaml
+
+kubectl create service clusterip ms-maildev --tcp=1080:1080 -tcp=1025:1025 --dry-run=client -o yaml > maildev-service.yaml
+kubectl apply -f maildev-service.yaml
+```
+
 For zipkin:
 
 ```bash
