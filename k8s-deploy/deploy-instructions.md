@@ -1,7 +1,7 @@
 ## Required Images:
 
 - `bitnami/zipkin:latest`
-- `binami/kafka:latest`
+- `bitnami/kafka:latest`
 - `keycloak/keycloak:latest`
 - `maildev/maildev:latest`
 - `mongo:latest`
