@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    creationTimestamp: null
+    labels:
+        app: ms-db-mysql-payment
+    name: ms-db-mysql-payment
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: ms-db-mysql-payment
+    strategy: { }
+    template:
+        metadata:
+            creationTimestamp: null
+            labels:
+                app: ms-db-mysql-payment
+        spec:
+            containers:
+                -   image: mysql:latest
+                    name: mysql
+                    resources: { }
+status: { }
