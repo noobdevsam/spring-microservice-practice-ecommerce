@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    creationTimestamp: null
+    labels:
+        app: ms-keycloak
+    name: ms-keycloak
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: ms-keycloak
+    strategy: { }
+    template:
+        metadata:
+            creationTimestamp: null
+            labels:
+                app: ms-keycloak
+        spec:
+            containers:
+                -   image: keycloak/keycloak:latest
+                    name: keycloak
+                    resources: { }
+                    env:
+                        -   name: KC_BOOTSTRAP_ADMIN_USERNAME
+                            value: admin
+                        -   name: KC_BOOTSTRAP_ADMIN_PASSWORD
+                            value: admin
+                        -   name: KC_HTTP_PORT
+                            value: "8088"
+                        -   name: KC_HOSTNAME
+                            value: ms-keycloak
+                    volumeMounts:
+                        -   mountPath: /opt/keycloak/data
+                            name: keycloak-data
+            
+            volumes:
+                -   name: keycloak-data
+                    persistentVolumeClaim:
+                        claimName: keycloak-data
+status: { }
