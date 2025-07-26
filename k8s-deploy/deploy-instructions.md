@@ -109,7 +109,7 @@ kubectl create deployment ms-zipkin --image=bitnami/zipkin:latest --dry-run=clie
 kubectl apply -f zipkin-deployment.yaml
 
 kubectl create service clusterip ms-zipkin --tcp=9412:9411 --dry-run=client -o yaml > zipkin-service.yaml
-kubectl apply -f zipkin-servuce.yaml
+kubectl apply -f zipkin-service.yaml
 ```
 
 
