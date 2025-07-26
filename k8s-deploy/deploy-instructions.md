@@ -97,7 +97,7 @@ kubectl create deployment ms-maildev --image=maildev/maildev:latest --dry-run=cl
 # edit maildev-deployment.yaml to set the correct environment variables and other configurations
 kubectl apply -f maildev-deployment.yaml
 
-kubectl create service clusterip ms-maildev --tcp=1080:1080 -tcp=1025:1025 --dry-run=client -o yaml > maildev-service.yaml
+kubectl create service clusterip ms-maildev --tcp=1080:1080 --tcp=1025:1025 --dry-run=client -o yaml > maildev-service.yaml
 kubectl apply -f maildev-service.yaml
 ```
 
