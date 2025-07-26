@@ -26,8 +26,8 @@ spec:
                             value: admin
                         -   name: KC_BOOTSTRAP_ADMIN_PASSWORD
                             value: admin
-#                        -   name: KC_HTTP_PORT
-#                            value: "8088"
+                        -   name: KC_HTTP_PORT
+                            value: "8088"
 #                        -   name: KC_HOSTNAME
 #                            value: ms-keycloak
 
