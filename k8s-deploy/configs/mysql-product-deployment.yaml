@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    creationTimestamp: null
+    labels:
+        app: ms-db-mysql-product
+    name: ms-db-mysql-product
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: ms-db-mysql-product
+    strategy: { }
+    template:
+        metadata:
+            creationTimestamp: null
+            labels:
+                app: ms-db-mysql-product
+        spec:
+            containers:
+                -   image: mysql:latest
+                    name: mysql
+                    resources: { }
+status: { }
