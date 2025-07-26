@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    creationTimestamp: null
+    labels:
+        app: ms-db-mysql-product
+    name: ms-db-mysql-product
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: ms-db-mysql-product
+    strategy: { }
+    template:
+        metadata:
+            creationTimestamp: null
+            labels:
+                app: ms-db-mysql-product
+        spec:
+            containers:
+                -   image: mysql:latest
+                    name: mysql
+                    resources: { }
+                    env:
+                        -   name: MYSQL_ROOT_PASSWORD
+                            value: password
+                        -   name: MYSQL_DATABASE
+                            value: productdb
+                        -   name: MYSQL_USER
+                            value: productadmin
+                        -   name: MYSQL_PASSWORD
+                            value: password
+                        -   name: MYSQL_TCP_PORT
+                            value: "3306"
+
+status: { }

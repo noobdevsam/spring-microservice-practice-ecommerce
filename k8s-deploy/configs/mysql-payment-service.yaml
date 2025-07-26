@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+    creationTimestamp: null
+    labels:
+        app: ms-db-mysql-payment
+    name: ms-db-mysql-payment
+spec:
+    ports:
+        -   name: 3308-3308
+            port: 3308
+            protocol: TCP
+            targetPort: 3308
+    selector:
+        app: ms-db-mysql-payment
+    type: ClusterIP
+status:
+    loadBalancer: { }
