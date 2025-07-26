@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+    creationTimestamp: null
+    labels:
+        app: ms-db-mysql-product
+    name: ms-db-mysql-product
+spec:
+    ports:
+        -   name: 3306-3306
+            port: 3306
+            protocol: TCP
+            targetPort: 3306
+    selector:
+        app: ms-db-mysql-product
+    type: ClusterIP
+status:
+    loadBalancer: { }
