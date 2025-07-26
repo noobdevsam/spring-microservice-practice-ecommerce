@@ -26,16 +26,9 @@ spec:
                             value: admin
                         -   name: KC_BOOTSTRAP_ADMIN_PASSWORD
                             value: admin
-                        -   name: KC_HTTP_PORT
-                            value: "8088"
-                        -   name: KC_HOSTNAME
-                            value: ms-keycloak
-                    volumeMounts:
-                        -   mountPath: /opt/keycloak/data
-                            name: keycloak-data
-            
-            volumes:
-                -   name: keycloak-data
-                    persistentVolumeClaim:
-                        claimName: keycloak-data
+#                        -   name: KC_HTTP_PORT
+#                            value: "8088"
+#                        -   name: KC_HOSTNAME
+#                            value: ms-keycloak
+
 status: { }
