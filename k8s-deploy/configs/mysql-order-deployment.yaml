@@ -21,4 +21,16 @@ spec:
                 -   image: mysql:latest
                     name: mysql
                     resources: { }
+                    env:
+                        -   name: MYSQL_ROOT_PASSWORD
+                            value: password
+                        -   name: MYSQL_DATABASE
+                            value: orderdb
+                        -   name: MYSQL_USER
+                            value: orderadmin
+                        -   name: MYSQL_PASSWORD
+                            value: password
+                        -   name: MYSQL_TCP_PORT
+                            value: "3307"
+
 status: { }
